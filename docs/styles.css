@@ -6,18 +6,3 @@ body {
     color: #444;
     background: #eee;
 }
-
-@media (prefers-color-scheme: dark) {
-    body {
-        color: #ccc;
-        background: black
-    }
-
-    a:link {
-        color: #5bf
-    }
-
-    a:visited {
-        color: #ccf
-    }
-}
