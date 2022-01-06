@@ -1,0 +1,23 @@
+body {
+    max-width: 650px;
+    margin: 40px auto;
+    padding: 0 10px;
+    font-family: 'Open Sans', sans-serif;
+    color: #444;
+    background: #eee;
+}
+
+@media (prefers-color-scheme: dark) {
+    body {
+        color: #ccc;
+        background: black
+    }
+
+    a:link {
+        color: #5bf
+    }
+
+    a:visited {
+        color: #ccf
+    }
+}
