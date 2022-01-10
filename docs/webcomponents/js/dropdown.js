@@ -6,8 +6,8 @@ template.innerHTML = `
 }
 </style>
 <div>
-    <slot name="trigger" data="trigger" class="trigger"></slot>
-    <slot data="content"></slot>
+    <slot name="trigger" class="trigger"></slot>
+    <slot class="content"></slot>
 </div>
 `;
 
@@ -33,9 +33,9 @@ class MikeDropdown extends HTMLElement {
         this.attachShadow({ mode: 'open' });
         this.shadowRoot.appendChild(template.content.cloneNode(true));
 
-        this.triggerElement = this.shadowRoot.querySelector('[data="trigger"]');
+        this.triggerElement = this.shadowRoot.querySelector('.trigger');
 
-        this.contentElement = this.shadowRoot.querySelector('[data="content"]');
+        this.contentElement = this.shadowRoot.querySelector('.content');
         this.contentElement.style.display = this.show ? 'block' : 'none';
 
         this._toggle = this.toggle.bind(this);

@@ -76,23 +76,35 @@ code {
 <main>
     
 <p>
-    Lately I've have an interest in Web Components.
+    Lately I've been interested in Web Components.
     My goal is to try and make some Web Components that are:
 </p>
 <ul>
     <li>
         Design system agnostic.
         I think components that are highly styleable are highly reusable.
+        This probably means limiting the use of the shadow DOM.
     </li>
     <li>
         SEO friendly.
-        My thought is that slot-heavy components will allow component content to be readable by search engines.
+        Limited use of template HTML.
     </li>
 </ul>
+<p>
+    These components are a work in progress.
+</p>
 
+
+<hr>
 <script type="module" src="/webcomponents/js/dropdown.js"></script>
 
 <h2>Dropdown</h2>
+<xmp>
+<mike-dropdown>
+    <div slot="trigger">Click here for content</div>
+    <div>Dropdown content</div>
+</mike-dropdown>
+</xmp>
 
 <h3>Unstyled</h3>
 <mike-dropdown>
@@ -131,6 +143,90 @@ code {
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
     </div>
 </mike-dropdown>
+
+<hr>
+<script type="module" src="/webcomponents/js/tabs.js"></script>
+
+<h2>Tabs</h2>
+
+<xmp>
+<mike-tabs>
+    <ul>
+        <li class="active">Tab 1</li>
+        <li>Tab 2</li>
+        <li>Tab 3</li>
+    </ul>
+    <ul>
+        <li class="active">Content 1</li>
+        <li>Content 2</li>
+        <li>Content 3</li>
+    </ul>
+</mike-tabs>
+</xmp>
+
+<h3>(Nearly) Unstyled</h3>
+<p>
+    The tabs component doesn't use the shadow DOM, so it relies on the user to customize all styles, including hiding content that does not have the <em>active</em> class.
+    The example below just highlights whichever tab/content pair would be active.
+    The benefit is that the component can gracefully handle adding and removing tabs.
+</p>
+<style>
+    mike-tabs.nearlyUnstyled .active {
+        color: green;
+    }
+</style>
+<mike-tabs class="nearlyUnstyled">
+    <ul>
+        <li class="active">Tab 1</li>
+        <li>Tab 2</li>
+        <li>Tab 3</li>
+    </ul>
+    <ul>
+        <li class="active">Content 1</li>
+        <li>Content 2</li>
+        <li>Content 3</li>
+    </ul>
+</mike-tabs>
+
+<h3>Basic Styles</h3>
+<style>
+    mike-tabs.basicStyles {
+        background-color: white;
+    }
+    mike-tabs.basicStyles .tabList {
+        list-style: none;
+        display: flex;
+        padding: 0;
+    }
+    mike-tabs.basicStyles .tab {
+        padding: 12px 20px;
+        border-bottom: 1px solid #ccc;
+    }
+    mike-tabs.basicStyles .tab.active {
+        border: 1px solid #ccc;
+        border-bottom: 0;
+    }
+    mike-tabs.basicStyles .tabContentList {
+        list-style: none;
+        padding: 0;
+    }
+    mike-tabs.basicStyles .tabContent:not(.active) {
+        display: none;
+    }
+</style>
+<mike-tabs class="basicStyles">
+    <ul class="tabList">
+        <li class="tab active">Tab 1</li>
+        <li class="tab">Tab 2</li>
+        <li class="tab">Tab 3</li>
+    </ul>
+    <ul class="tabContentList">
+        <li class="tabContent active">Content 1</li>
+        <li class="tabContent">Content 2</li>
+        <li class="tabContent">Content 3</li>
+    </ul>
+</mike-tabs>
+
 
 </main>
 </body>
