@@ -1,0 +1,41 @@
+<script type="module" src="/webcomponents/js/dropdown.js"></script>
+
+<h2>Dropdown</h2>
+
+<h3>Unstyled</h3>
+<mike-dropdown>
+    <div slot="trigger">Click here for content</div>
+    <div>Dropdown content</div>
+</mike-dropdown>
+
+<h3>Styled with Indicator</h3>
+<style>
+.styledWithIndicator .trigger {
+    background-color: #fff;
+    display: flex;
+    justify-content: space-between;
+    padding: 16px 24px;
+    border: 1px solid #ccc;
+}
+.styledWithIndicator .indicator {
+    transition: all 0.2s ease;
+}
+.styledWithIndicator[show] .indicator {
+    transform: rotate(-180deg);
+}
+.styledWithIndicator .content {
+    padding: 16px 24px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-top: 0;
+}
+</style>
+<mike-dropdown class="styledWithIndicator">
+    <div slot="trigger" class="trigger">
+        <div class="triggerText">Click here for content</div>
+        <div class="indicator">☝</div>
+    </div>
+    <div class="content">
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    </div>
+</mike-dropdown>

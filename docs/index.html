@@ -21,17 +21,63 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        :root {
+    --text-color: #444;
+}
+
+body {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 0 10px;
+    font-family: 'Open Sans', sans-serif;
+    color: var(--text-color);
+    background: #eee;
+}
+
+a:link, a:visited, a:hover, a:active {
+    color: var(--text-color);
+    font-weight: bold;
+    text-decoration: none;
+}
+
+nav {
+
+}
+
+nav > ul {
+    display: flex;
+    gap: 1.5em;
+    list-style: none;
+    padding: 0;
+}
+
+code {
+    white-space: pre;
+}
+
+/**************************************/
+/* Web Component: Dropdown */
+/**************************************/
+
+    </style>
 </head>
 
 <body>
-
 <h1>Mike Schreiber</h1>
-
+<nav>
+    <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/webcomponents">Web Components</a></li>
+    </ul>
+</nav>
+<main>
+    
 <p>Hello.</p>
 
 
+</main>
 </body>
 </html>
