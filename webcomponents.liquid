@@ -3,26 +3,17 @@ layout: baseLayout.liquid
 ---
 
 <p>
-    Lately I've been interested in Web Components.
-    My goal is to try and make some Web Components that are:
+    Lately I have been interested in Web Components.
+    I think there is a lot of potential to encapsulate the Javascript used for many common UX widgets, while allowing them to be 100% styleable.
+    These can be used as building blocks to other Web Components, or as ready-to-use Javascript to build your own design system.
+    Since they do not use the shadow DOM, they are also SEO-friendly.
 </p>
-<ul>
-    <li>
-        Design system agnostic.
-        I think components that are highly styleable are highly reusable.
-        This probably means limiting the use of the shadow DOM.
-    </li>
-    <li>
-        SEO friendly.
-        Limited use of template HTML.
-    </li>
-</ul>
 <p>
     These components are a work in progress.
 </p>
 
 
 <hr>
-{% include webComponents/dropdown.liquid %}
+{% include webComponents/visibilityToggle.liquid %}
 <hr>
-{% include webComponents/tabs.liquid %}
+{% comment %}{% include webComponents/tabs.liquid %}{% endcomment %}
