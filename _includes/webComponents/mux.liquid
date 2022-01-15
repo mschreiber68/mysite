@@ -1,0 +1,58 @@
+<script type="module" src="/webcomponents/js/mux.js"></script>
+
+<h3>Mux</h3>
+<p>
+    A Mux, or Multiplexer, consists of a set of selections to choose from.
+    Only one selection can be active at a time.
+    Muxes can be used to build things like tabs and accordions.
+</p>
+
+<h4>Example: Tabs</h4>
+<style>
+    mike-mux.tabs .tab {
+        padding: 12px 20px;
+        cursor: pointer;
+    }
+    mike-mux.tabs .tabList {
+        list-style: none;
+        display: flex;
+        padding: 0;
+    }
+    mike-mux.tabs:not([selected="s1"]) .tab.s1,
+    mike-mux.tabs:not([selected="s2"]) .tab.s2,
+    mike-mux.tabs:not([selected="s3"]) .tab.s3 {
+        border-bottom: 1px solid #ccc;
+    }
+    mike-mux.tabs[selected="s1"] .tab.s1,
+    mike-mux.tabs[selected="s2"] .tab.s2,
+    mike-mux.tabs[selected="s3"] .tab.s3 {
+        border: 1px solid #ccc;
+        border-bottom: 0;
+    }
+    mike-mux.tabs .contentList {
+        list-style: none;
+        padding: 0;
+    }
+    mike-mux.tabs:not([selected="s1"]) .content.s1,
+    mike-mux.tabs:not([selected="s2"]) .content.s2,
+    mike-mux.tabs:not([selected="s3"]) .content.s3 {
+        display: none;
+    }
+    mike-mux.tabs[selected="s1"] .content.s1,
+    mike-mux.tabs[selected="s2"] .content.s2,
+    mike-mux.tabs[selected="s3"] .content.s3 {
+        display: block;
+    }
+</style>
+<mike-mux selected="s1" class="tabs">
+    <ul class="tabList">
+        <li data-select="s1" class="tab s1">Select 1</li>
+        <li data-select="s2" class="tab s2">Select 2</li>
+        <li data-select="s3" class="tab s3">Select 3</li>
+    </ul>
+    <ul class="contentList">
+        <li class="content s1">Content 1</li>
+        <li class="content s2">Content 2</li>
+        <li class="content s3">Content 3</li>
+    </ul>
+</mike-mux>

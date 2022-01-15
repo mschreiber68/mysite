@@ -4,16 +4,17 @@ layout: baseLayout.liquid
 
 <p>
     Lately I have been interested in Web Components.
-    I think there is a lot of potential to encapsulate the Javascript used for many common UX widgets, while allowing them to be 100% styleable.
-    These can be used as building blocks to other Web Components, or as ready-to-use Javascript to build your own design system.
-    Since they do not use the shadow DOM, they are also SEO-friendly.
 </p>
+
+<h2>Building Blocks</h2>
 <p>
-    These components are a work in progress.
+    These components aim to encapsulate the javascript for a general user interaction.
+    They are 100% customizable and styleable.
+    They are most useful as building blocks for more advanced components.
 </p>
 
+<hr>
+{% include webComponents/toggle.liquid %}
 
 <hr>
-{% include webComponents/visibilityToggle.liquid %}
-<hr>
-{% comment %}{% include webComponents/tabs.liquid %}{% endcomment %}
+{% include webComponents/mux.liquid %}

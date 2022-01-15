@@ -1,0 +1,80 @@
+<script type="module" src="/webcomponents/js/toggle.js"></script>
+
+<h3>Toggle</h3>
+<p>
+    A Toggle is made up a binary state and a toggle element.
+    When the element is interacted with, the state inverts.
+    Toggles can be used to build things like dropdowns and tooltips.
+</p>
+
+<h4>Example: Basic</h4>
+<style>
+    mike-toggle.basic .content {
+        display: none;
+    }
+    mike-toggle.basic[active] .content {
+        display: block;
+    }
+</style>
+<mike-toggle class="basic">
+    <button data-toggle>Click me</button>
+    <div class="content" data-content>Content</div>
+</mike-toggle>
+
+
+<h4>Example: Dropdown</h4>
+<style>
+    mike-toggle.dropdown .trigger {
+        background-color: #fff;
+        display: flex;
+        justify-content: space-between;
+        padding: 16px 24px;
+        border: 1px solid #ccc;
+        cursor: pointer;
+    }
+    mike-toggle.dropdown .indicator {
+        transition: all 0.2s ease;
+    }
+    mike-toggle.dropdown[active] .indicator {
+        transform: rotate(-180deg);
+    }
+    mike-toggle.dropdown .content {
+        padding: 16px 24px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-top: 0;
+        display: none;
+    }
+    mike-toggle.dropdown[active] .content {
+        display: block;
+    }
+</style>
+<mike-toggle class="dropdown">
+    <div data-toggle class="trigger">
+        <div class="triggerText">Click here for content</div>
+        <div class="indicator">☝</div>
+    </div>
+    <div class="content">
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    </div>
+</mike-toggle>
+
+<h4>Nested toggle</h4>
+
+<style>
+    mike-toggle.outer .outerContent,
+    mike-toggle.inner .innerContent {
+        display: none;
+    }
+    mike-toggle.outer[active] .outerContent,
+    mike-toggle.inner[active] .innerContent {
+        display: block;
+    }
+</style>
+<mike-toggle class="outer" id="outerToggle">
+    <div data-toggle data-for="outerToggle">Outer</div>
+    <mike-toggle class="outerContent inner">
+        <div data-toggle>Inner</div>
+        <div class="innerContent">Content</div>
+    </mike-toggle>
+</mike-toggle>
