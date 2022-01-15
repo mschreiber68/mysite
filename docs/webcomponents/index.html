@@ -77,158 +77,104 @@ code {
     
 <p>
     Lately I have been interested in Web Components.
-</p>
-
-<h2>Building Blocks</h2>
-<p>
-    These components aim to encapsulate the javascript for a general user interaction.
-    They are 100% customizable and styleable.
-    They are most useful as building blocks for more advanced components.
+    Below are toy versions of components that only encapsulate <em>behavior</em>.
+    They can then be 100% styled by the project that uses them.
 </p>
 
 <hr>
-<script type="module" src="/webcomponents/js/toggle.js"></script>
+<script type="module" src="/webcomponents/js/tabs.js"></script>
 
-<h3>Toggle</h3>
-<p>
-    A Toggle is made up a binary state and a toggle element.
-    When the element is interacted with, the state inverts.
-    Toggles can be used to build things like dropdowns and tooltips.
-</p>
+<h3>Tabs</h3>
 
-<h4>Example: Basic</h4>
 <style>
-    mike-toggle.basic .content {
-        display: none;
-    }
-    mike-toggle.basic[active] .content {
-        display: block;
-    }
-</style>
-<mike-toggle class="basic">
-    <button data-toggle>Click me</button>
-    <div class="content" data-content>Content</div>
-</mike-toggle>
-
-
-<h4>Example: Dropdown</h4>
-<style>
-    mike-toggle.dropdown .trigger {
-        background-color: #fff;
+    x-tabs .tabRow {
         display: flex;
-        justify-content: space-between;
-        padding: 16px 24px;
-        border: 1px solid #ccc;
-        cursor: pointer;
     }
-    mike-toggle.dropdown .indicator {
-        transition: all 0.2s ease;
-    }
-    mike-toggle.dropdown[active] .indicator {
-        transform: rotate(-180deg);
-    }
-    mike-toggle.dropdown .content {
-        padding: 16px 24px;
-        background-color: #fff;
-        border: 1px solid #ccc;
-        border-top: 0;
-        display: none;
-    }
-    mike-toggle.dropdown[active] .content {
-        display: block;
-    }
-</style>
-<mike-toggle class="dropdown">
-    <div data-toggle class="trigger">
-        <div class="triggerText">Click here for content</div>
-        <div class="indicator">☝</div>
-    </div>
-    <div class="content">
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-    </div>
-</mike-toggle>
 
-<h4>Nested toggle</h4>
-
-<style>
-    mike-toggle.outer .outerContent,
-    mike-toggle.inner .innerContent {
-        display: none;
-    }
-    mike-toggle.outer[active] .outerContent,
-    mike-toggle.inner[active] .innerContent {
-        display: block;
-    }
-</style>
-<mike-toggle class="outer" id="outerToggle">
-    <div data-toggle data-for="outerToggle">Outer</div>
-    <mike-toggle class="outerContent inner">
-        <div data-toggle>Inner</div>
-        <div class="innerContent">Content</div>
-    </mike-toggle>
-</mike-toggle>
-
-
-<hr>
-<script type="module" src="/webcomponents/js/mux.js"></script>
-
-<h3>Mux</h3>
-<p>
-    A Mux, or Multiplexer, consists of a set of selections to choose from.
-    Only one selection can be active at a time.
-    Muxes can be used to build things like tabs and accordions.
-</p>
-
-<h4>Example: Tabs</h4>
-<style>
-    mike-mux.tabs .tab {
+    x-tab {
+        border-bottom: 1px solid #ccc;
         padding: 12px 20px;
         cursor: pointer;
     }
-    mike-mux.tabs .tabList {
-        list-style: none;
-        display: flex;
-        padding: 0;
-    }
-    mike-mux.tabs:not([selected="s1"]) .tab.s1,
-    mike-mux.tabs:not([selected="s2"]) .tab.s2,
-    mike-mux.tabs:not([selected="s3"]) .tab.s3 {
-        border-bottom: 1px solid #ccc;
-    }
-    mike-mux.tabs[selected="s1"] .tab.s1,
-    mike-mux.tabs[selected="s2"] .tab.s2,
-    mike-mux.tabs[selected="s3"] .tab.s3 {
+
+    x-tab[selected] {
         border: 1px solid #ccc;
         border-bottom: 0;
     }
-    mike-mux.tabs .contentList {
-        list-style: none;
-        padding: 0;
+
+    x-tab-panel {
+        display: block;
+        padding: 12px;
     }
-    mike-mux.tabs:not([selected="s1"]) .content.s1,
-    mike-mux.tabs:not([selected="s2"]) .content.s2,
-    mike-mux.tabs:not([selected="s3"]) .content.s3 {
+    x-tab-panel[hidden] {
         display: none;
     }
-    mike-mux.tabs[selected="s1"] .content.s1,
-    mike-mux.tabs[selected="s2"] .content.s2,
-    mike-mux.tabs[selected="s3"] .content.s3 {
-        display: block;
+
+</style>
+<x-tabs>
+    <div class="tabRow">
+        <x-tab>Tab 1</x-tab>
+        <x-tab>Tab 2</x-tab>
+        <x-tab>Tab 3</x-tab>
+    </div>
+    <x-tab-panel>Panel 1</x-tab-panel>
+    <x-tab-panel>Panel 2</x-tab-panel>
+    <x-tab-panel>Panel 3</x-tab-panel>
+</x-tabs>
+
+<hr>
+<script type="module" src="/webcomponents/js/modal.js"></script>
+
+<h3>Modal</h3>
+
+<style>
+    x-modal {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        opacity: 0;
+        visibility: hidden;
+        transform: scale(1.1);
+        transition: visibility 0s linear 0.25s, opacity 0.25s 0s, transform 0.25s;
+    }
+
+    x-modal[active] {
+        opacity: 1;
+        visibility: visible;
+        transform: scale(1.0);
+        transition: visibility 0s linear 0s, opacity 0.25s 0s, transform 0.25s;
+    }
+
+    x-modal-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        padding: 1rem 1.5rem;
+        width: 24rem;
+        border-radius: 0.5rem;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    x-modal-dismiss {
+        cursor: pointer;
+        border: 1px solid black;
+        padding: 4px;
     }
 </style>
-<mike-mux selected="s1" class="tabs">
-    <ul class="tabList">
-        <li data-select="s1" class="tab s1">Select 1</li>
-        <li data-select="s2" class="tab s2">Select 2</li>
-        <li data-select="s3" class="tab s3">Select 3</li>
-    </ul>
-    <ul class="contentList">
-        <li class="content s1">Content 1</li>
-        <li class="content s2">Content 2</li>
-        <li class="content s3">Content 3</li>
-    </ul>
-</mike-mux>
 
+<button onclick="document.querySelector('x-modal').active = true">Show Modal</button>
+<x-modal>
+    <x-modal-content>
+        <div>A Modal</div>
+        <x-modal-dismiss>X</x-modal-dismiss>
+    </x-modal-content>
+</x-modal>
 </main>
 </body>
 </html>

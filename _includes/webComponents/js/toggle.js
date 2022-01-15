@@ -45,14 +45,7 @@ class MikeToggle extends HTMLElement {
         }
         this.toggleElement = this.querySelector(selector);
 
-        this.toggle = () => {
-            this.active = !this.active;
-            this.dispatchEvent(new CustomEvent('toggle', {
-                detail: {
-                    active: this.active
-                }
-            }));
-        };
+        this.toggle = this.toggle.bind(this);
     }
 
     connectedCallback() {
@@ -61,6 +54,15 @@ class MikeToggle extends HTMLElement {
 
     disconnectedCallback() {
         this.toggleElement.removeEventListener(this.toggleEvent, this.toggle);
+    }
+
+    toggle() {
+        this.active = !this.active;
+        this.dispatchEvent(new CustomEvent('toggle', {
+            detail: {
+                active: this.active
+            }
+        }));
     }
 }
 
