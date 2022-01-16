@@ -2,41 +2,50 @@
 
 {% block inlineCss %}
     {% include 'css/webcomponents.css' %}
-    {% include 'css/components/tabs.css' %}
-    {% include 'css/components/modal.css' %}
+    {% include 'css/patterns/tabsDemo.css' %}
+    {% include 'css/patterns/modalDemo.css' %}
+    {% include 'css/patterns/dropdownDemo.css' %}
 {% endblock %}
 
 {% block js %}
-    <script type="module" src="/js/components/tabs.js"></script>
-    <script type="module" src="/js/components/modal.js"></script>
+    <script type="module" src="/js/pages/webcomponents.js"></script>
 {% endblock %}
 
 {% block main %}
-<p>
-    Lately I have been interested in Web Components.
-    Below are toy versions of components that only encapsulate <em>behavior</em>.
-    They can then be 100% styled by the project that uses them.
-</p>
+    <p>
+        Lately I have been interested in Web Components.
+        Below are toy versions of components that only encapsulate <em>behavior</em>.
+        They can then be 100% styled by the project that uses them.
+    </p>
+
+    <h3 class="demoHeader">Tabs</h3>
+    {% set tabs = [
+        {name: 'Tab 1', content: 'Panel 1'},
+        {name: 'Tab 2', content: 'Panel 2'},
+        {name: 'Tab 3', content: 'Panel 3'},
+    ] %}
+    {% include 'components/tabs.html.twig' with {tabs: tabs} %}
 
 
-<h3 class="demoHeader">Tabs</h3>
+    <h3 class="demoHeader">Modal</h3>
+    <button onclick="document.querySelector('x-modal').active = true">Show Modal</button>
+    <x-modal>
+        <x-modal-content>
+            <div>A Modal</div>
+            <x-modal-dismiss>X</x-modal-dismiss>
+        </x-modal-content>
+    </x-modal>
 
-{% set tabs = [
-    {name: 'Tab 1', content: 'Panel 1'},
-    {name: 'Tab 2', content: 'Panel 2'},
-    {name: 'Tab 3', content: 'Panel 3'},
-] %}
-{% include 'components/tabs.html.twig' with {tabs: tabs} %}
 
-
-<h3 class="demoHeader">Modal</h3>
-
-<button onclick="document.querySelector('x-modal').active = true">Show Modal</button>
-<x-modal>
-    <x-modal-content>
-        <div>A Modal</div>
-        <x-modal-dismiss>X</x-modal-dismiss>
-    </x-modal-content>
-</x-modal>
-
+    <h3 class="demoHeader">Dropdown</h3>
+    <x-dropdown class="dropdownDemo">
+        <x-dropdown-toggle class="item">Click for Fruit</x-dropdown-toggle>
+        <x-dropdown-content>
+            <ul>
+                <li class="item">Apple</li>
+                <li class="item">Banana</li>
+                <li class="item">Orange</li>
+            </ul>
+        </x-dropdown-content>
+    </x-dropdown>
 {% endblock %}

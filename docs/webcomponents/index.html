@@ -28,6 +28,9 @@ body {
     font-family: Verdana, sans-serif;
     color: var(--text-color);
     background: #fff;
+
+    /* Prevent scrollbar from shifting layout */
+    padding-left: calc(100vw - 100%);
 }
 
 a:link, a:visited, a:hover, a:active {
@@ -149,10 +152,46 @@ x-modal-dismiss {
     cursor: pointer;
     border: 1px solid black;
     padding: 4px;
-}  </style>
+}    .dropdownDemo {
+    max-width: 200px;
+    display: block;
+}
 
-      <script type="module" src="/js/components/tabs.js"></script>
-    <script type="module" src="/js/components/modal.js"></script>
+.dropdownDemo ul {
+    padding: 0;
+    list-style: none;
+    margin: 0;
+}
+
+.dropdownDemo .item {
+    padding: 8px 16px;
+    border: 1px solid #ccc;
+}
+
+.dropdownDemo x-dropdown-toggle {
+    display: block;
+    cursor: pointer;
+}
+
+.dropdownDemo x-dropdown-content {
+    display: none;
+}
+
+.dropdownDemo x-dropdown-content .item {
+    border-top: 0;
+}
+
+.dropdownDemo[active] x-dropdown-content {
+    display: block;
+}
+
+.dropdownDemo x-dropdown-content {
+    display: none;
+}
+
+  </style>
+
+      <script type="module" src="/js/pages/webcomponents.js"></script>
 
 </head>
 
@@ -167,16 +206,14 @@ x-modal-dismiss {
   </ul>
 </nav>
 <main>
-  <p>
-    Lately I have been interested in Web Components.
-    Below are toy versions of components that only encapsulate <em>behavior</em>.
-    They can then be 100% styled by the project that uses them.
-</p>
+      <p>
+        Lately I have been interested in Web Components.
+        Below are toy versions of components that only encapsulate <em>behavior</em>.
+        They can then be 100% styled by the project that uses them.
+    </p>
 
-
-<h3 class="demoHeader">Tabs</h3>
-
-<x-tabs>
+    <h3 class="demoHeader">Tabs</h3>
+        <x-tabs>
   <div class="tabRow">
           <x-tab>Tab 1</x-tab>
           <x-tab>Tab 2</x-tab>
@@ -187,16 +224,27 @@ x-modal-dismiss {
       <x-tab-panel>Panel 3</x-tab-panel>
   </x-tabs>
 
-<h3 class="demoHeader">Modal</h3>
+    <h3 class="demoHeader">Modal</h3>
+    <button onclick="document.querySelector('x-modal').active = true">Show Modal</button>
+    <x-modal>
+        <x-modal-content>
+            <div>A Modal</div>
+            <x-modal-dismiss>X</x-modal-dismiss>
+        </x-modal-content>
+    </x-modal>
 
-<button onclick="document.querySelector('x-modal').active = true">Show Modal</button>
-<x-modal>
-    <x-modal-content>
-        <div>A Modal</div>
-        <x-modal-dismiss>X</x-modal-dismiss>
-    </x-modal-content>
-</x-modal>
 
+    <h3 class="demoHeader">Dropdown</h3>
+    <x-dropdown class="dropdownDemo">
+        <x-dropdown-toggle class="item">Click for Fruit</x-dropdown-toggle>
+        <x-dropdown-content>
+            <ul>
+                <li class="item">Apple</li>
+                <li class="item">Banana</li>
+                <li class="item">Orange</li>
+            </ul>
+        </x-dropdown-content>
+    </x-dropdown>
 </main>
 
 </body>
