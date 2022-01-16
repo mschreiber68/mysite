@@ -62,6 +62,7 @@ class Modal extends HTMLElement {
     }
 
     connectedCallback() {
+        this._upgradeProperty('active');
         this.addEventListener('click', this._onClick);
         this.addEventListener('modal-dismiss-click', this._onModalDismissClick);
     }
@@ -69,6 +70,14 @@ class Modal extends HTMLElement {
     disconnectedCallback() {
         this.removeEventListener('click', this._onClick);
         this.removeEventListener('modal-dismiss-click', this._onModalDismissClick);
+    }
+
+    _upgradeProperty(prop) {
+        if (this.hasOwnProperty(prop)) {
+            let value = this[prop];
+            delete this[prop];
+            this[prop] = value;
+        }
     }
 
     _onClick(event) {
