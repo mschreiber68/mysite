@@ -2,7 +2,8 @@ module.exports = function(eleventyConfig) {
 
     // Allows rendering code in HTML code blocks.
     eleventyConfig.addPassthroughCopy({
-        '_includes/webComponents/js': 'webcomponents/js',
+        '_includes/css': 'css',
+        '_includes/js': 'js',
     });
 
     // Return your Object options:

@@ -13,11 +13,6 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://mschreiber68.github.io/mysite/">
     <meta property="og:description" content="Mike Schreiber's Page">
-    
-
-    
-    
-    
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -58,11 +53,71 @@ code {
     white-space: pre;
 }
 
-/**************************************/
-/* Web Component: Dropdown */
-/**************************************/
+        x-tabs .tabRow {
+    display: flex;
+}
 
+x-tab {
+    border-bottom: 1px solid #ccc;
+    padding: 12px 20px;
+    cursor: pointer;
+}
+
+x-tab[selected] {
+    border: 1px solid #ccc;
+    border-bottom: 0;
+}
+
+x-tab-panel {
+    display: block;
+    padding: 12px;
+}
+x-tab-panel[hidden] {
+    display: none;
+}
+        x-modal {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(1.1);
+    transition: visibility 0s linear 0.25s, opacity 0.25s 0s, transform 0.25s;
+}
+
+x-modal[active] {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1.0);
+    transition: visibility 0s linear 0s, opacity 0.25s 0s, transform 0.25s;
+}
+
+x-modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 1rem 1.5rem;
+    width: 24rem;
+    border-radius: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+x-modal-dismiss {
+    cursor: pointer;
+    border: 1px solid black;
+    padding: 4px;
+}
     </style>
+
+    <script type="module" src="/js/components/tabs.js"></script>
+    <script type="module" src="/js/components/modal.js"></script>
+
 </head>
 
 <body>
@@ -82,35 +137,9 @@ code {
 </p>
 
 <hr>
-<script type="module" src="/webcomponents/js/tabs.js"></script>
 
 <h3>Tabs</h3>
 
-<style>
-    x-tabs .tabRow {
-        display: flex;
-    }
-
-    x-tab {
-        border-bottom: 1px solid #ccc;
-        padding: 12px 20px;
-        cursor: pointer;
-    }
-
-    x-tab[selected] {
-        border: 1px solid #ccc;
-        border-bottom: 0;
-    }
-
-    x-tab-panel {
-        display: block;
-        padding: 12px;
-    }
-    x-tab-panel[hidden] {
-        display: none;
-    }
-
-</style>
 <x-tabs>
     <div class="tabRow">
         <x-tab>Tab 1</x-tab>
@@ -123,50 +152,8 @@ code {
 </x-tabs>
 
 <hr>
-<script type="module" src="/webcomponents/js/modal.js"></script>
 
 <h3>Modal</h3>
-
-<style>
-    x-modal {
-        position: fixed;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        opacity: 0;
-        visibility: hidden;
-        transform: scale(1.1);
-        transition: visibility 0s linear 0.25s, opacity 0.25s 0s, transform 0.25s;
-    }
-
-    x-modal[active] {
-        opacity: 1;
-        visibility: visible;
-        transform: scale(1.0);
-        transition: visibility 0s linear 0s, opacity 0.25s 0s, transform 0.25s;
-    }
-
-    x-modal-content {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background-color: white;
-        padding: 1rem 1.5rem;
-        width: 24rem;
-        border-radius: 0.5rem;
-        display: flex;
-        justify-content: space-between;
-    }
-
-    x-modal-dismiss {
-        cursor: pointer;
-        border: 1px solid black;
-        padding: 4px;
-    }
-</style>
 
 <button onclick="document.querySelector('x-modal').active = true">Show Modal</button>
 <x-modal>

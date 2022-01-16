@@ -13,19 +13,20 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://mschreiber68.github.io/mysite/">
     <meta property="og:description" content="Mike Schreiber's Page">
-    {% comment %}<meta property="og:image" content="image.png">{% endcomment %}
-
-    {% comment %}<link rel="icon" href="/favicon.ico">{% endcomment %}
-    {% comment %}<link rel="icon" href="/favicon.svg" type="image/svg+xml">{% endcomment %}
-    {% comment %}<link rel="apple-touch-icon" href="/apple-touch-icon.png">{% endcomment %}
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
-        {% include styles.css %}
+        {% include css/site.css %}
+        {% include css/components/tabs.css %}
+        {% include css/components/modal.css %}
     </style>
+
+    <script type="module" src="/js/components/tabs.js"></script>
+    <script type="module" src="/js/components/modal.js"></script>
+
 </head>
 
 <body>

@@ -1,0 +1,33 @@
+:root {
+    --text-color: #444;
+}
+
+body {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 0 10px;
+    font-family: 'Open Sans', sans-serif;
+    color: var(--text-color);
+    background: #eee;
+}
+
+a:link, a:visited, a:hover, a:active {
+    color: var(--text-color);
+    font-weight: bold;
+    text-decoration: none;
+}
+
+nav {
+
+}
+
+nav > ul {
+    display: flex;
+    gap: 1.5em;
+    list-style: none;
+    padding: 0;
+}
+
+code {
+    white-space: pre;
+}
