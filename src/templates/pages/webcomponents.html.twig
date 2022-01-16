@@ -1,7 +1,16 @@
----
-layout: templates/baseLayout.liquid
----
+{% extends 'baseLayout.html.twig' %}
 
+{% block inlineCss %}
+    {% include 'css/components/tabs.css' %}
+    {% include 'css/components/modal.css' %}
+{% endblock %}
+
+{% block js %}
+    <script type="module" src="/js/components/tabs.js"></script>
+    <script type="module" src="/js/components/modal.js"></script>
+{% endblock %}
+
+{% block main %}
 <p>
     Lately I have been interested in Web Components.
     Below are toy versions of components that only encapsulate <em>behavior</em>.
@@ -34,3 +43,5 @@ layout: templates/baseLayout.liquid
         <x-modal-dismiss>X</x-modal-dismiss>
     </x-modal-content>
 </x-modal>
+
+{% endblock %}

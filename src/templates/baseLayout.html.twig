@@ -19,42 +19,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
-    :root {
-    --text-color: #444;
-}
+    {% include 'css/site.css' %}
+    {% block inlineCss %}{% endblock %}
+  </style>
 
-body {
-    max-width: 800px;
-    margin: 40px auto;
-    padding: 0 10px;
-    font-family: 'Open Sans', sans-serif;
-    color: var(--text-color);
-    background: #eee;
-}
+  {% block js %}{% endblock %}
 
-a:link, a:visited, a:hover, a:active {
-    color: var(--text-color);
-    font-weight: bold;
-    text-decoration: none;
-}
-
-nav {
-
-}
-
-nav > ul {
-    display: flex;
-    gap: 1.5em;
-    list-style: none;
-    padding: 0;
-}
-
-code {
-    white-space: pre;
-}
-      </style>
-
-  
 </head>
 
 <body>
@@ -66,7 +36,7 @@ code {
   </ul>
 </nav>
 <main>
-  <p>Hello.</p>
+  {% block main %}{% endblock %}
 </main>
 </body>
 </html>

@@ -1,0 +1,6 @@
+{
+    "name": "mschreiber/mysite-static",
+    "require": {
+        "twig/twig": "^3.0"
+    }
+}
