@@ -14,12 +14,9 @@
   <meta property="og:url" content="https://mikeschreiber.dev/">
   <meta property="og:description" content="Mike Schreiber's Page">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
-
   <style>
     {% include 'css/site.css' %}
+    {% include 'css/patterns/nav.css' %}
     {% block inlineCss %}{% endblock %}
   </style>
 
@@ -29,14 +26,12 @@
 
 <body>
 <h1>Mike Schreiber</h1>
-<nav>
-  <ul>
-    <li><a href="/">Home</a></li>
-    <li><a href="/webcomponents">Web Components</a></li>
-  </ul>
-</nav>
+
+{% include 'patterns/nav.html.twig' %}
+
 <main>
   {% block main %}{% endblock %}
 </main>
+
 </body>
 </html>

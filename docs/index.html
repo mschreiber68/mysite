@@ -14,10 +14,6 @@
   <meta property="og:url" content="https://mikeschreiber.dev/">
   <meta property="og:description" content="Mike Schreiber's Page">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
-
   <style>
     :root {
     --text-color: #444;
@@ -28,7 +24,7 @@ body {
     max-width: 800px;
     margin: 40px auto;
     padding: 0 10px;
-    font-family: 'Open Sans', sans-serif;
+    font-family: Verdana, sans-serif;
     color: var(--text-color);
     background: #fff;
 }
@@ -38,7 +34,16 @@ a:link, a:visited, a:hover, a:active {
     text-decoration: none;
 }
 
-nav {
+
+
+button {
+    cursor: pointer;
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+}    nav {
     border-top: 1px solid var(--text-color);
     border-bottom: 1px solid var(--text-color);
 }
@@ -50,17 +55,17 @@ nav ul {
     padding: 0;
 }
 
-nav ul li:hover {
-   font-weight: bold;
+nav a:hover {
+    font-weight: bold;
 }
 
-button {
-    cursor: pointer;
-    background-color: var(--primary-color);
-    color: #fff;
-    border: none;
-    padding: 12px;
-    border-radius: 6px;
+nav a::before {
+    display: block;
+    content: attr(title);
+    font-weight: bold;
+    height: 0;
+    overflow: hidden;
+    visibility: hidden;
 }      </style>
 
   
@@ -68,14 +73,16 @@ button {
 
 <body>
 <h1>Mike Schreiber</h1>
+
 <nav>
   <ul>
-    <li><a href="/">Home</a></li>
-    <li><a href="/webcomponents">Web Components</a></li>
+    <li><a href="/" title="Home">Home</a></li>
+    <li><a href="/webcomponents" title="Web Components">Web Components</a></li>
   </ul>
 </nav>
 <main>
   <p>Hello.</p>
 </main>
+
 </body>
 </html>
