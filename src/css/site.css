@@ -14,19 +14,23 @@ body {
 
 a:link, a:visited, a:hover, a:active {
     color: var(--text-color);
-    font-weight: bold;
     text-decoration: none;
 }
 
 nav {
-
+    border-top: 1px solid var(--text-color);
+    border-bottom: 1px solid var(--text-color);
 }
 
-nav > ul {
+nav ul {
     display: flex;
     gap: 1.5em;
     list-style: none;
     padding: 0;
+}
+
+nav ul li:hover {
+   font-weight: bold;
 }
 
 button {
