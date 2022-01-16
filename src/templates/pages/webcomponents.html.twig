@@ -1,6 +1,7 @@
 {% extends 'baseLayout.html.twig' %}
 
 {% block inlineCss %}
+    {% include 'css/webcomponents.css' %}
     {% include 'css/components/tabs.css' %}
     {% include 'css/components/modal.css' %}
 {% endblock %}
@@ -17,24 +18,18 @@
     They can then be 100% styled by the project that uses them.
 </p>
 
-<hr>
 
-<h3>Tabs</h3>
+<h3 class="demoHeader">Tabs</h3>
 
-<x-tabs>
-    <div class="tabRow">
-        <x-tab>Tab 1</x-tab>
-        <x-tab>Tab 2</x-tab>
-        <x-tab>Tab 3</x-tab>
-    </div>
-    <x-tab-panel>Panel 1</x-tab-panel>
-    <x-tab-panel>Panel 2</x-tab-panel>
-    <x-tab-panel>Panel 3</x-tab-panel>
-</x-tabs>
+{% set tabs = [
+    {name: 'Tab 1', content: 'Panel 1'},
+    {name: 'Tab 2', content: 'Panel 2'},
+    {name: 'Tab 3', content: 'Panel 3'},
+] %}
+{% include 'components/tabs.html.twig' with {tabs: tabs} %}
 
-<hr>
 
-<h3>Modal</h3>
+<h3 class="demoHeader">Modal</h3>
 
 <button onclick="document.querySelector('x-modal').active = true">Show Modal</button>
 <x-modal>

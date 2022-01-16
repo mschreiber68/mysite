@@ -9,7 +9,6 @@ $twigLoader = new FilesystemLoader([__DIR__ . '/src/templates', __DIR__ . '/src'
 $twig = new Environment($twigLoader);
 
 $pageTemplates = scandir(__DIR__ . '/src/templates/pages');
-var_dump($pageTemplates);
 
 foreach ($pageTemplates as $pageTemplate) {
     if (!str_ends_with($pageTemplate, '.html.twig')) {
@@ -17,14 +16,15 @@ foreach ($pageTemplates as $pageTemplate) {
     }
 
     [$name] = explode('.', $pageTemplate);
-    var_dump($name);
 
     $html = $twig->render("pages/{$pageTemplate}", []);
 
     if ($name === 'index') {
         $outputFile = __DIR__ . '/docs/index.html';
     } else {
-        mkdir(__DIR__ . "/docs/{$name}");
+        if (!is_dir(__DIR__ . "/docs/{$name}")) {
+            mkdir(__DIR__ . "/docs/{$name}");
+        }
         $outputFile = __DIR__ . "/docs/{$name}/index.html";
     }
 

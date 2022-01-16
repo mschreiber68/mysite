@@ -1,0 +1,10 @@
+<x-tabs>
+  <div class="tabRow">
+    {% for tab in tabs %}
+      <x-tab>{{ tab.name }}</x-tab>
+    {% endfor %}
+  </div>
+  {% for tab in tabs %}
+    <x-tab-panel>{{ tab.content | raw }}</x-tab-panel>
+  {% endfor %}
+</x-tabs>

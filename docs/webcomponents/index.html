@@ -21,6 +21,7 @@
   <style>
     :root {
     --text-color: #444;
+    --primary-color: #336b87;
 }
 
 body {
@@ -29,7 +30,7 @@ body {
     padding: 0 10px;
     font-family: 'Open Sans', sans-serif;
     color: var(--text-color);
-    background: #eee;
+    background: #fff;
 }
 
 a:link, a:visited, a:hover, a:active {
@@ -49,22 +50,28 @@ nav > ul {
     padding: 0;
 }
 
-code {
-    white-space: pre;
-}
-        x-tabs .tabRow {
+button {
+    cursor: pointer;
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+}        .demoHeader {
+    margin-top: 60px;
+}    x-tabs .tabRow {
     display: flex;
 }
 
 x-tab {
-    border-bottom: 1px solid #ccc;
-    padding: 12px 20px;
+    /*border-bottom: 1px solid #ccc;*/
+    padding: 12px 32px;
     cursor: pointer;
 }
 
 x-tab[selected] {
-    border: 1px solid #ccc;
-    border-bottom: 0;
+    /*border: 1px solid #ccc;*/
+    border-bottom: 3px solid var(--primary-color);
 }
 
 x-tab-panel {
@@ -132,24 +139,21 @@ x-modal-dismiss {
     They can then be 100% styled by the project that uses them.
 </p>
 
-<hr>
 
-<h3>Tabs</h3>
+<h3 class="demoHeader">Tabs</h3>
 
 <x-tabs>
-    <div class="tabRow">
-        <x-tab>Tab 1</x-tab>
-        <x-tab>Tab 2</x-tab>
-        <x-tab>Tab 3</x-tab>
-    </div>
-    <x-tab-panel>Panel 1</x-tab-panel>
-    <x-tab-panel>Panel 2</x-tab-panel>
-    <x-tab-panel>Panel 3</x-tab-panel>
-</x-tabs>
+  <div class="tabRow">
+          <x-tab>Tab 1</x-tab>
+          <x-tab>Tab 2</x-tab>
+          <x-tab>Tab 3</x-tab>
+      </div>
+      <x-tab-panel>Panel 1</x-tab-panel>
+      <x-tab-panel>Panel 2</x-tab-panel>
+      <x-tab-panel>Panel 3</x-tab-panel>
+  </x-tabs>
 
-<hr>
-
-<h3>Modal</h3>
+<h3 class="demoHeader">Modal</h3>
 
 <button onclick="document.querySelector('x-modal').active = true">Show Modal</button>
 <x-modal>
