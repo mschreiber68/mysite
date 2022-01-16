@@ -18,6 +18,7 @@
     :root {
     --text-color: #444;
     --primary-color: #336b87;
+    --breakpointSmall: 600px;
 }
 
 body {
@@ -43,6 +44,17 @@ button {
     border: none;
     padding: 12px;
     border-radius: 6px;
+}
+
+@media only screen and (max-width: 600px) {
+    body {
+        margin: 0;
+        padding: 10px
+    }
+
+    .bigScreenHeader {
+        display: none;
+    }
 }    nav {
     border-top: 1px solid var(--text-color);
     border-bottom: 1px solid var(--text-color);
@@ -66,15 +78,27 @@ nav a::before {
     height: 0;
     overflow: hidden;
     visibility: hidden;
+}
+
+nav .mobileNavHeader {
+    display: none;
+}
+
+@media only screen and (max-width: 600px) {
+
+    nav .mobileNavHeader {
+        /*display: block;*/
+    }
 }      </style>
 
   
 </head>
 
 <body>
-<h1>Mike Schreiber</h1>
+<h1 class="bigScreenHeader">Mike Schreiber</h1>
 
 <nav>
+  <h1 class="mobileNavHeader">Mike Schreiber</h1>
   <ul>
     <li><a href="/" title="Home">Home</a></li>
     <li><a href="/webcomponents" title="Web Components">Web Components</a></li>

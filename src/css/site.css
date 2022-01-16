@@ -1,6 +1,7 @@
 :root {
     --text-color: #444;
     --primary-color: #336b87;
+    --breakpointSmall: 600px;
 }
 
 body {
@@ -26,4 +27,15 @@ button {
     border: none;
     padding: 12px;
     border-radius: 6px;
+}
+
+@media only screen and (max-width: 600px) {
+    body {
+        margin: 0;
+        padding: 10px
+    }
+
+    .bigScreenHeader {
+        display: none;
+    }
 }

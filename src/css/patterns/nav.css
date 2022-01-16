@@ -22,3 +22,14 @@ nav a::before {
     overflow: hidden;
     visibility: hidden;
 }
+
+nav .mobileNavHeader {
+    display: none;
+}
+
+@media only screen and (max-width: 600px) {
+
+    nav .mobileNavHeader {
+        /*display: block;*/
+    }
+}
