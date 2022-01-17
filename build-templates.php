@@ -5,7 +5,7 @@ use Twig\Loader\FilesystemLoader;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-$twigLoader = new FilesystemLoader([__DIR__ . '/src/templates', __DIR__ . '/src']);
+$twigLoader = new FilesystemLoader([__DIR__ . '/src/templates', __DIR__ . '/build']);
 $twig = new Environment($twigLoader);
 
 $pageTemplates = scandir(__DIR__ . '/src/templates/pages');

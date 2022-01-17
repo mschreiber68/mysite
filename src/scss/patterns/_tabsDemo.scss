@@ -1,0 +1,23 @@
+.tabsDemo {
+    .tabRow {
+        display: flex;
+    }
+
+    x-tab {
+        padding: 12px 32px;
+        cursor: pointer;
+
+        &[selected] {
+            border-bottom: 3px solid var(--primary-color);
+        }
+    }
+
+    x-tab-panel {
+        display: block;
+        padding: 12px;
+
+        &[hidden] {
+            display: none;
+        }
+    }
+}

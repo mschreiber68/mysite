@@ -2,9 +2,6 @@
 
 {% block inlineCss %}
     {% include 'css/webcomponents.css' %}
-    {% include 'css/patterns/tabsDemo.css' %}
-    {% include 'css/patterns/modalDemo.css' %}
-    {% include 'css/patterns/dropdownDemo.css' %}
 {% endblock %}
 
 {% block js %}
@@ -24,7 +21,10 @@
         {name: 'Tab 2', content: 'Panel 2'},
         {name: 'Tab 3', content: 'Panel 3'},
     ] %}
-    {% include 'components/tabs.html.twig' with {tabs: tabs} %}
+    {% include 'components/tabs.html.twig' with {
+        tabs: tabs,
+        class: 'tabsDemo'
+    } only %}
 
 
     <h3 class="demoHeader">Modal</h3>

@@ -1,0 +1,25 @@
+{
+  "name": "mysite-static",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mschreiber68/mysite.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mschreiber68/mysite/issues"
+  },
+  "homepage": "https://github.com/mschreiber68/mysite#readme",
+  "devDependencies": {
+    "sass": "^1.48.0"
+  }
+}
