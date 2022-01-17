@@ -1,14 +1,14 @@
-nav {
-    border-top: 1px solid var(--text-color);
-    border-bottom: 1px solid var(--text-color);
-}
+/*nav {*/
+/*    border-top: 1px solid var(--text-color);*/
+/*    border-bottom: 1px solid var(--text-color);*/
+/*}*/
 
-nav ul {
-    display: flex;
-    gap: 1.5em;
-    list-style: none;
-    padding: 0;
-}
+/*nav ul {*/
+/*    display: flex;*/
+/*    gap: 1.5em;*/
+/*    list-style: none;*/
+/*    padding: 0;*/
+/*}*/
 
 nav a:hover {
     font-weight: bold;
@@ -23,13 +23,108 @@ nav a::before {
     visibility: hidden;
 }
 
-nav .mobileNavHeader {
-    display: none;
+/*nav .mobileNavHeader {*/
+/*    display: none;*/
+/*}*/
+
+/*@media only screen and (max-width: 600px) {*/
+
+/*    nav .mobileNavHeader {*/
+/*        !*display: block;*!*/
+/*    }*/
+/*}*/
+
+.globalHeading {
+    display: grid;
+    grid-template-areas:
+        "name name"
+        "top top"
+        "nav nav"
+        "bottom bottom"
 }
 
-@media only screen and (max-width: 600px) {
+.nameHeader {
+    grid-area: name;
+}
 
-    nav .mobileNavHeader {
-        /*display: block;*/
+.topSeparator {
+    grid-area: top;
+    width: 100%;
+}
+
+.hamburgerNav {
+    grid-area: nav;
+}
+
+.bottomSeparator {
+    grid-area: bottom;
+    width: 100%;
+}
+
+.hamburgerButton {
+    display: none;
+    /*border: 1px solid;*/
+    /*padding: 4px;*/
+}
+
+.navLinks {
+    display: flex;
+    gap: 1.5em;
+    padding: 12px 0;
+}
+
+@media only screen and (max-width: 1000px) {
+    .globalHeading {
+        grid-template-columns: 1fr auto;
+        grid-template-areas:
+        "top top"
+        "name nav"
+        "bottom bottom"
+    }
+
+    .nameHeader {
+        font-size: 24px;
+    }
+
+    .hamburgerNav {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .hamburgerButton {
+        display: block;
+        font-size: 24px;
+        cursor: pointer;
+    }
+
+    .hamburgerContent {
+        display: none;
+        position: absolute;
+        right: 0;
+        top: 100%;
+        z-index: 10;
+        background-color: #fff;
+    }
+
+    .hamburgerNav[active] .hamburgerContent {
+        display: block;
+
+    }
+
+    .navLinks {
+        gap: 0;
+        flex-direction: column;
+        border-radius: 8px;
+        background-color: #eee;
+        padding: 8px
+    }
+
+    .navLink {
+        display: block;
+        white-space: nowrap;
+        margin: 8px;
     }
 }
+

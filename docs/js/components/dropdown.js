@@ -63,7 +63,7 @@ class Dropdown extends HTMLElement {
     _onDocumentClick(event) {
         if (this._wasToggleClicked(event)) {
             this.active = !this.active;
-        } else if (this._wasClickOutsideContent(event)) {
+        } else if (!this._wasContentClicked(event)) {
             this.active = false;
         }
     }
@@ -72,8 +72,8 @@ class Dropdown extends HTMLElement {
         return this.toggleElement.contains(event.target);
     }
 
-    _wasClickOutsideContent(event) {
-        return event.target !== this.contentElement && event.target.contains(this.contentElement);
+    _wasContentClicked(event) {
+        return event.target === this.contentElement || this.contentElement.contains(event.target);
     }
 }
 

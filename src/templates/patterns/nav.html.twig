@@ -1,7 +1,18 @@
-<nav>
-  <h1 class="mobileNavHeader">Mike Schreiber</h1>
-  <ul>
-    <li><a href="/" title="Home">Home</a></li>
-    <li><a href="/webcomponents" title="Web Components">Web Components</a></li>
-  </ul>
-</nav>
+{% set navLinks %}
+    <a class="navLink" href="/" title="Home">Home</a>
+    <a class="navLink" href="/webcomponents" title="Web Components">Web Components</a>
+{% endset %}
+
+<div class="globalHeading">
+  <h1 class="nameHeader">Mike Schreiber</h1>
+  <hr class="topSeparator">
+  <x-dropdown class="hamburgerNav">
+    <x-dropdown-toggle class="hamburgerButton">☰</x-dropdown-toggle>
+    <x-dropdown-content class="hamburgerContent">
+      <nav class="navLinks">
+        {{ navLinks }}
+      </nav>
+    </x-dropdown-content>
+  </x-dropdown>
+  <hr class="bottomSeparator">
+</div>
