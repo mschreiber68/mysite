@@ -58,19 +58,7 @@ button {
     .bigScreenHeader {
         display: none;
     }
-}    /*nav {*/
-/*    border-top: 1px solid var(--text-color);*/
-/*    border-bottom: 1px solid var(--text-color);*/
-/*}*/
-
-/*nav ul {*/
-/*    display: flex;*/
-/*    gap: 1.5em;*/
-/*    list-style: none;*/
-/*    padding: 0;*/
-/*}*/
-
-nav a:hover {
+}    nav a:hover {
     font-weight: bold;
 }
 
@@ -83,17 +71,6 @@ nav a::before {
     visibility: hidden;
 }
 
-/*nav .mobileNavHeader {*/
-/*    display: none;*/
-/*}*/
-
-/*@media only screen and (max-width: 600px) {*/
-
-/*    nav .mobileNavHeader {*/
-/*        !*display: block;*!*/
-/*    }*/
-/*}*/
-
 .globalHeading {
     display: grid;
     grid-template-areas:
@@ -105,6 +82,7 @@ nav a::before {
 
 .nameHeader {
     grid-area: name;
+    margin: 12px 0;
 }
 
 .topSeparator {
@@ -133,7 +111,7 @@ nav a::before {
     padding: 12px 0;
 }
 
-@media only screen and (max-width: 1000px) {
+@media only screen and (max-width: 800px) {
     .globalHeading {
         grid-template-columns: 1fr auto;
         grid-template-areas:
