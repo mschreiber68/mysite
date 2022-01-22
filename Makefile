@@ -2,10 +2,16 @@
 
 .PHONY: build build-templates build-sass
 
-build: build-sass build-templates
+clean:
+	rm -rf build/
 
-build-templates:
+build: sass postcss templates
+
+templates:
 	php build-templates.php
 
-build-sass:
-	npx sass src/scss/pages:build/css --style compressed
+sass:
+	npx sass src/scss/pages:build/css --no-source-map
+
+postcss:
+	npx postcss build/css --replace
