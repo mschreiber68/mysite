@@ -19,42 +19,32 @@ squareTemplate.innerHTML = `
 
 class HuntGameSquare extends HTMLElement {
     static get observedAttributes() {
-        return ['winner', 'color'];
+        return ['state'];
     }
 
-    get winner() {
-        return this.hasAttribute('winner');
+    get state() {
+        return this.getAttribute('state')
     }
 
-    set winner(value) {
-        if (value)
-            this.setAttribute('winner', '');
-        else
-            this.removeAttribute('winner');
+    set state(value) {
+        this.setAttribute('state', value);
     }
 
-    get color() {
-        return this.getAttribute('color');
+    get colorVal() {
+        return this.getAttribute('color-val')
     }
 
-    set color(value) {
-        if (value)
-            this.setAttribute('color', value);
-        else
-            this.removeAttribute('color');
+    set colorVal(value) {
+        this.setAttribute('color-val', value);
     }
 
-    attributeChangedCallback(name) {
-        if (name === 'winner') {
-            if (this.winner) {
-                this.element.classList.add('winner');
-            } else {
-                this.element.classList.remove('winner');
-            }
-        }
-        if (name === 'color') {
-            if (this.color) {
-                this.element.style.backgroundColor = this.color;
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (name === 'state') {
+            if (newValue === HuntGameSquare.REVEAL_COLOR) {
+                this.element.style.backgroundColor = this.colorVal;
+            } else if (newValue === HuntGameSquare.REVEAL_WINNER) {
+                this.element.style.backgroundColor = '#fff';
+                this.element.textContent = '☘'
             } else {
                 this.element.style.backgroundColor = '#bbb';
             }
@@ -68,6 +58,9 @@ class HuntGameSquare extends HTMLElement {
         this.element = this.shadowRoot.querySelector('.square');
     }
 }
+
+HuntGameSquare.REVEAL_COLOR = 'reveal_color';
+HuntGameSquare.REVEAL_WINNER = 'reveal_winner;'
 
 window.customElements.define('x-huntgame-square', HuntGameSquare);
 
@@ -96,6 +89,8 @@ const SIZE = 256;
 class HuntGame extends HTMLElement {
     constructor() {
         super();
+        this._onClick = this._onClick.bind(this);
+
         this.attachShadow({mode: 'open'});
         this.shadowRoot.appendChild(gameTemplate.content.cloneNode(true));
 
@@ -106,16 +101,47 @@ class HuntGame extends HTMLElement {
         for (let i=0; i<SIZE; i++) {
             const square = document.createElement('x-huntgame-square');
             if (i === location) {
-                square.setAttribute('winner', '');
-                square.color = 'red';
-                this.winnerSquare = square;
+                this.winner = square;
+
             }
             this.grid.appendChild(square);
         }
     }
 
     connectedCallback() {
+        this.addEventListener('click', this._onClick);
+    }
 
+    disconnectedCallback() {
+        // TODO
+    }
+
+    _onClick(event) {
+        const square = event.composedPath().find(el => el.tagName === 'X-HUNTGAME-SQUARE');
+        if (square === this.winner) {
+            square.state = HuntGameSquare.REVEAL_WINNER;
+        } else {
+            square.colorVal = this._computeColor(square);
+            square.state = HuntGameSquare.REVEAL_COLOR;
+        }
+    }
+
+    _getElementCenter(element) {
+        const {top, left, width, height} = element.getBoundingClientRect();
+        return {
+            x: left + width / 2,
+            y: top + height / 2
+        };
+    }
+
+    _computeColor(square) {
+        const winnerPos = this._getElementCenter(this.winner);
+        const currentPos = this._getElementCenter(square);
+
+        const distance = Math.hypot(winnerPos.x - currentPos.x, winnerPos.y - currentPos.y);
+
+        const alpha = 1 - distance / 320;
+        return `rgba(255, 0, 0, ${alpha})`;
     }
 }
 
