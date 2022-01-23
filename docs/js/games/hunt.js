@@ -96,9 +96,11 @@ gameTemplate.innerHTML = `
         grid-template-columns: repeat(${LENGTH}, ${SQUARE_PX}px);
     }
 </style>
-
-<div class="grid">
-
+<div class="game">
+    <div class="grid"></div>
+    <div class="info">
+        <div class="textHint"></div>
+    </div>
 </div>
 `;
 
@@ -111,9 +113,10 @@ class HuntGame extends HTMLElement {
         this.shadowRoot.appendChild(gameTemplate.content.cloneNode(true));
 
         this.grid = this.shadowRoot.querySelector('.grid');
+        this.textHint = this.shadowRoot.querySelector('.textHint');
+        this.previousColorIndex = null;
 
         const location = Math.floor(Math.random() * NUM_SQUARES);
-
         for (let i=0; i<NUM_SQUARES; i++) {
             const square = document.createElement('x-huntgame-square');
             if (i === location) {
@@ -132,9 +135,12 @@ class HuntGame extends HTMLElement {
         const square = event.composedPath().find(el => el.tagName === 'X-HUNTGAME-SQUARE');
         if (square) {
             if (square === this.winner) {
+                this.textHint.textContent = '';
                 this._revealAll();
             } else {
-                square.revealColor(this._computeColor(square));
+                const colorIndex = this._computeColorIndex(square);
+                square.revealColor(COLORS[colorIndex]);
+                this._updateTextHint(colorIndex);
             }
         }
 
@@ -145,7 +151,7 @@ class HuntGame extends HTMLElement {
             if (square === this.winner) {
                 square.revealWinner();
             } else {
-                square.revealColor(this._computeColor(square));
+                square.revealColor(COLORS[this._computeColorIndex(square)]);
             }
         })
     }
@@ -158,14 +164,40 @@ class HuntGame extends HTMLElement {
         };
     }
 
-    _computeColor(square) {
+    _computeColorIndex(square) {
         const winnerPos = this._getElementCenter(this.winner);
         const currentPos = this._getElementCenter(square);
 
         const distance = Math.hypot(winnerPos.x - currentPos.x, winnerPos.y - currentPos.y);
 
-        const colorIndex = Math.min(Math.floor(distance / COLOR_SCALE * COLORS.length), COLORS.length - 1);
-        return COLORS[colorIndex];
+        return Math.min(Math.floor(distance / COLOR_SCALE * COLORS.length), COLORS.length - 1);
+    }
+
+    _updateTextHint(colorIndex) {
+        let text;
+        if (this.previousColorIndex) {
+            if (this.previousColorIndex < colorIndex) {
+                text = 'Colder';
+            } else if (this.previousColorIndex > colorIndex) {
+                text = 'Warmer';
+            } else {
+                text = this._getAbsoluteTemp(colorIndex);
+            }
+        } else {
+            text = this._getAbsoluteTemp(colorIndex);
+        }
+        this.textHint.textContent = text;
+        this.previousColorIndex = colorIndex;
+    }
+
+    _getAbsoluteTemp(colorIndex) {
+        if (colorIndex < 3) {
+            return 'Hot!';
+        }
+        if (colorIndex < COLORS.length / 2) {
+            return 'Warm';
+        }
+        return 'Cold';
     }
 }
 
