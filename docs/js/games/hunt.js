@@ -2,7 +2,7 @@
  * HuntGame Square
  **************************************************************/
 
-const SQUARE_PX = 25;
+const SQUARE_PX = 28;
 const SQUARE_FONT_PX = Math.round(SQUARE_PX * 0.66);
 
 const squareTemplate = document.createElement('template');
@@ -82,7 +82,7 @@ const COLORS = [
     '#0000FF',
 ]
 
-const LENGTH = 16;
+const LENGTH = 20;
 const NUM_SQUARES = Math.pow(LENGTH, 2);
 const COLOR_SCALE = SQUARE_PX * LENGTH * 0.75;
 
@@ -92,8 +92,8 @@ gameTemplate.innerHTML = `
     .grid {
         display: grid;
         gap: 1px;
-        grid-template-rows: repeat(16, ${SQUARE_PX}px);
-        grid-template-columns: repeat(16, ${SQUARE_PX}px);
+        grid-template-rows: repeat(${LENGTH}, ${SQUARE_PX}px);
+        grid-template-columns: repeat(${LENGTH}, ${SQUARE_PX}px);
     }
 </style>
 
