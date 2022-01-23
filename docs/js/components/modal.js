@@ -19,10 +19,6 @@ class ModalDismiss extends HTMLElement {
         this.addEventListener('click', this._onClick);
     }
 
-    disconnectedCallback() {
-        this.removeEventListener('click', this._onClick);
-    }
-
     _onClick(event) {
         this.dispatchEvent(new CustomEvent('modal-dismiss-click', {
             bubbles: true,
@@ -65,11 +61,6 @@ class Modal extends HTMLElement {
         this._upgradeProperty('active');
         this.addEventListener('click', this._onClick);
         this.addEventListener('modal-dismiss-click', this._onModalDismissClick);
-    }
-
-    disconnectedCallback() {
-        this.removeEventListener('click', this._onClick);
-        this.removeEventListener('modal-dismiss-click', this._onModalDismissClick);
     }
 
     _upgradeProperty(prop) {
