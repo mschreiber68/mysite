@@ -1,0 +1,14 @@
+{% extends 'baseLayout.html.twig' %}
+
+{% block inlineCss %}
+  {% include 'css/games.css' %}
+{% endblock %}
+
+{% block js %}
+  <script type="module" src="/js/pages/games.js"></script>
+{% endblock %}
+
+{% block main %}
+  <h3>Find the Leprechaun</h3>
+  <x-huntgame></x-huntgame>
+{% endblock %}
