@@ -116,6 +116,14 @@ class HuntGame extends HTMLElement {
         this.textHint = this.shadowRoot.querySelector('.textHint');
         this.previousColorIndex = null;
 
+        this._initGrid();
+    }
+
+    connectedCallback() {
+        this.addEventListener('click', this._onClick);
+    }
+
+    _initGrid() {
         const location = Math.floor(Math.random() * NUM_SQUARES);
         for (let i=0; i<NUM_SQUARES; i++) {
             const square = document.createElement('x-huntgame-square');
@@ -125,10 +133,6 @@ class HuntGame extends HTMLElement {
             }
             this.grid.appendChild(square);
         }
-    }
-
-    connectedCallback() {
-        this.addEventListener('click', this._onClick);
     }
 
     _onClick(event) {
@@ -167,10 +171,9 @@ class HuntGame extends HTMLElement {
     _computeColorIndex(square) {
         const winnerPos = this._getElementCenter(this.winner);
         const currentPos = this._getElementCenter(square);
-
         const distance = Math.hypot(winnerPos.x - currentPos.x, winnerPos.y - currentPos.y);
-
-        return Math.min(Math.floor(distance / COLOR_SCALE * COLORS.length), COLORS.length - 1);
+        const computedIndex = Math.floor(distance / COLOR_SCALE * COLORS.length);
+        return Math.min(computedIndex, COLORS.length - 1);
     }
 
     _updateTextHint(colorIndex) {
