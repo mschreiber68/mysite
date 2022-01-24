@@ -5,23 +5,22 @@
 }
 
 body {
-    max-width: 900px;
-    margin: 40px auto;
-    padding: 0 10px;
+    display: flex;
+    justify-content: center;
     font-family: Verdana, sans-serif;
     color: var(--text-color);
     background: #fff;
+}
 
-    /* Prevent scrollbar from shifting layout */
-    padding-left: calc(100vw - 100%);
+.pageContent {
+    width: min(900px, 100%);
+    margin: 0 15px;
 }
 
 a:link, a:visited, a:hover, a:active {
     color: var(--text-color);
     text-decoration: none;
 }
-
-
 
 button {
     cursor: pointer;
@@ -32,12 +31,13 @@ button {
     border-radius: 6px;
 }
 
-@media only screen and (max-width: 600px) {
-    body {
-        margin: 0;
-        padding: 10px
+@media only screen and (min-width: 900px) {
+    .pageContent {
+        width: 900px;
     }
+}
 
+@media only screen and (max-width: 600px) {
     .bigScreenHeader {
         display: none;
     }

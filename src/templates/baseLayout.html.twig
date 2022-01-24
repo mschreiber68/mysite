@@ -24,11 +24,13 @@
 </head>
 
 <body>
-{% include 'patterns/nav.html.twig' %}
+<div class="pageContent">
 
+{% include 'patterns/nav.html.twig' %}
 <main>
   {% block main %}{% endblock %}
 </main>
 
+</div>
 </body>
 </html>

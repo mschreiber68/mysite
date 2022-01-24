@@ -1,3 +1,5 @@
+import { applySoleModifier } from '../domutils.js'
+
 /***************************************************************
  * HuntGame Square
  **************************************************************/
@@ -35,7 +37,7 @@ class HuntGameSquare extends HTMLElement {
 
     revealWinner() {
         this.element.style.backgroundColor = '#fff';
-        this.element.textContent = '😄';
+        this.element.textContent = '😀';
     }
 
     revealColor(color) {
@@ -55,7 +57,7 @@ window.customElements.define('x-huntgame-square', HuntGameSquare);
  **************************************************************/
 
 const COLORS = [
-    '#ff0000',
+    '#FF0000',
     '#FF1C00',
     '#FF3700',
     '#FF5300',
@@ -89,17 +91,46 @@ const COLOR_SCALE = SQUARE_PX * LENGTH * 0.75;
 const gameTemplate = document.createElement('template')
 gameTemplate.innerHTML = `
 <style>
+    .game {
+        display: grid;
+        grid-template-columns: auto 1fr;
+    }
     .grid {
         display: grid;
         gap: 1px;
         grid-template-rows: repeat(${LENGTH}, ${SQUARE_PX}px);
         grid-template-columns: repeat(${LENGTH}, ${SQUARE_PX}px);
     }
+    .info {
+        display: grid;
+        justify-items: center;
+        align-items: center;
+    }
+    .textHint {
+        font-size: 50px;
+        line-height: 50px;
+        min-height: 50px;
+    }
+    .textHint--hot {
+        color: #ff0000;
+    }
+    .textHint--cold {
+        color: #0000ff;
+    }
+    .restartButton {
+        cursor: pointer;
+        background-color: var(--primary-color);
+        color: #fff;
+        border: none;
+        padding: 12px;
+        border-radius: 6px;
+    }
 </style>
 <div class="game">
     <div class="grid"></div>
     <div class="info">
         <div class="textHint"></div>
+        <button class="restartButton">Restart</button>
     </div>
 </div>
 `;
@@ -108,12 +139,15 @@ class HuntGame extends HTMLElement {
     constructor() {
         super();
         this._onClick = this._onClick.bind(this);
+        this._restart = this._restart.bind(this);
 
         this.attachShadow({mode: 'open'});
         this.shadowRoot.appendChild(gameTemplate.content.cloneNode(true));
 
         this.grid = this.shadowRoot.querySelector('.grid');
         this.textHint = this.shadowRoot.querySelector('.textHint');
+        this.restartButton = this.shadowRoot.querySelector('.restartButton');
+
         this.previousColorIndex = null;
 
         this._initGrid();
@@ -121,6 +155,7 @@ class HuntGame extends HTMLElement {
 
     connectedCallback() {
         this.addEventListener('click', this._onClick);
+        this.restartButton.addEventListener('click', this._restart)
     }
 
     _initGrid() {
@@ -133,6 +168,18 @@ class HuntGame extends HTMLElement {
             }
             this.grid.appendChild(square);
         }
+    }
+
+    _restart() {
+        this.previousColorIndex = null;
+        const location = Math.floor(Math.random() * NUM_SQUARES);
+        this.grid.querySelectorAll('x-huntgame-square').forEach((square, i) => {
+            square.reset();
+            if (location === i) {
+                this.winner = square;
+            }
+        });
+        this.textHint.textContent = '';
     }
 
     _onClick(event) {
@@ -177,30 +224,32 @@ class HuntGame extends HTMLElement {
     }
 
     _updateTextHint(colorIndex) {
-        let text;
-        if (this.previousColorIndex) {
+        let text, modifier;
+        if (this.previousColorIndex && this.previousColorIndex !== colorIndex) {
             if (this.previousColorIndex < colorIndex) {
                 text = 'Colder';
-            } else if (this.previousColorIndex > colorIndex) {
-                text = 'Warmer';
+                modifier = 'textHint--cold';
             } else {
-                text = this._getAbsoluteTemp(colorIndex);
+                text = 'Warmer';
+                modifier = 'textHint--hot';
             }
         } else {
-            text = this._getAbsoluteTemp(colorIndex);
+            if (colorIndex < 3) {
+                text = 'Hot!';
+                modifier = 'textHint--hot';
+            } else if (colorIndex < COLORS.length / 2) {
+                text = 'Warm';
+                modifier = 'textHint--hot';
+            } else {
+                text = 'Cold';
+                modifier = 'textHint--cold';
+            }
         }
-        this.textHint.textContent = text;
-        this.previousColorIndex = colorIndex;
-    }
 
-    _getAbsoluteTemp(colorIndex) {
-        if (colorIndex < 3) {
-            return 'Hot!';
-        }
-        if (colorIndex < COLORS.length / 2) {
-            return 'Warm';
-        }
-        return 'Cold';
+        this.textHint.textContent = text;
+        applySoleModifier(this.textHint, modifier);
+        
+        this.previousColorIndex = colorIndex;
     }
 }
 

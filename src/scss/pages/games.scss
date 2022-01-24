@@ -1,2 +1,6 @@
 @use "../_site.scss";
 @use "../patterns/_nav.scss";
+
+.pageContent {
+    width: min(1000px, 100%);
+}
