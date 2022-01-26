@@ -11,6 +11,7 @@ const squareTemplate = document.createElement('template');
 squareTemplate.innerHTML = `
 <style>
     .square {
+        cursor: pointer;
         background-color: #bbb;
         /*border: 1px solid black; */
         height: 100%;
@@ -122,6 +123,15 @@ gameTemplate.innerHTML = `
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
     }
+    .textHint--winner {
+        background-image: linear-gradient(0, gold, darkgoldenrod);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .score {
+        font-size: 50px;
+        font-weight: bold;
+    }
     .restartButton {
         cursor: pointer;
         background-color: var(--primary-color);
@@ -135,6 +145,7 @@ gameTemplate.innerHTML = `
     <div class="grid"></div>
     <div class="info">
         <div class="textHint"></div>
+        <div class="score"></div>
         <button class="restartButton">Restart</button>
     </div>
 </div>
@@ -151,9 +162,11 @@ class HuntGame extends HTMLElement {
 
         this.grid = this.shadowRoot.querySelector('.grid');
         this.textHint = this.shadowRoot.querySelector('.textHint');
+        this.score = this.shadowRoot.querySelector('.score');
         this.restartButton = this.shadowRoot.querySelector('.restartButton');
 
         this.previousColorIndex = null;
+        this.scoreCalculator = null;
 
         this._initGrid();
     }
@@ -185,21 +198,31 @@ class HuntGame extends HTMLElement {
             }
         });
         this.textHint.textContent = '';
+        this.score.textContent = '';
+        this.scoreCalculator = null;
     }
 
     _onClick(event) {
         const square = event.composedPath().find(el => el.tagName === 'X-HUNTGAME-SQUARE');
-        if (square) {
-            if (square === this.winner) {
-                this.textHint.textContent = '';
-                this._revealAll();
-            } else {
-                const colorIndex = this._computeColorIndex(square);
-                square.revealColor(COLORS[colorIndex]);
-                this._updateTextHint(colorIndex);
-            }
+        if (!square) {
+            return;
         }
 
+        if (!this.scoreCalculator) {
+            this.scoreCalculator = new GameScoreCalculator();
+        }
+
+        if (square === this.winner) {
+            this.textHint.textContent = 'Winner!';
+            applySoleModifier(this.textHint, 'textHint--winner');
+            this._revealAll();
+            this._displayScore();
+        } else {
+            const colorIndex = this._computeColorIndex(square);
+            square.revealColor(COLORS[colorIndex]);
+            this._updateTextHint(colorIndex);
+            this.scoreCalculator.incrementClicks();
+        }
     }
 
     _revealAll() {
@@ -210,6 +233,11 @@ class HuntGame extends HTMLElement {
                 square.revealColor(COLORS[this._computeColorIndex(square)]);
             }
         })
+    }
+
+    _displayScore() {
+        this.scoreCalculator.end();
+        this.score.textContent = `Score: ${this.scoreCalculator.calculateScore()}`;
     }
 
     _getElementCenter(element) {
@@ -259,3 +287,25 @@ class HuntGame extends HTMLElement {
 }
 
 window.customElements.define('x-huntgame', HuntGame);
+
+class GameScoreCalculator {
+    constructor() {
+        this.timeStarted = performance.now();
+        this.timeEnded = null;
+        this.clicks = 0;
+    }
+
+    incrementClicks() {
+        this.clicks++;
+    }
+
+    end() {
+        this.timeEnded = performance.now();
+    }
+
+    calculateScore() {
+        const timeDiff = this.timeEnded - this.timeStarted;
+        const calculated = Math.round(1000 - (timeDiff / 100) - (this.clicks * 20));
+        return Math.max(calculated, 1);
+    }
+}
