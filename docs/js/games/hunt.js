@@ -110,12 +110,17 @@ gameTemplate.innerHTML = `
         font-size: 50px;
         line-height: 50px;
         min-height: 50px;
+        font-weight: bold;
     }
     .textHint--hot {
-        color: #ff0000;
+        background-image: linear-gradient(0, lightsalmon, red);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
     }
     .textHint--cold {
-        color: #0000ff;
+        background-image: linear-gradient(0, lightblue, blue);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
     }
     .restartButton {
         cursor: pointer;
@@ -248,7 +253,7 @@ class HuntGame extends HTMLElement {
 
         this.textHint.textContent = text;
         applySoleModifier(this.textHint, modifier);
-        
+
         this.previousColorIndex = colorIndex;
     }
 }
