@@ -4,14 +4,8 @@
   {% include 'css/games.css' %}
 {% endblock %}
 
-{% block js %}
-  <script type="module" src="/js/pages/games.js"></script>
-{% endblock %}
-
 {% block main %}
-  <h3>Hot and Cold</h3>
-  <x-huntgame></x-huntgame>
-
-  <h3>Math Practice</h3>
-  <x-math-practice></x-math-practice>
+  <a href="/hotandcold">Hot and Cold</a>
+  <br><br>
+  <a href="/mathpractice">Math Practice</a>
 {% endblock %}

@@ -1,0 +1,51 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Mike Schreiber</title>
+  <meta name="description" content="Mike Schreiber">
+  <meta name="author" content="Mike Schreiber">
+
+  <meta property="og:title" content="Mike Schreiber">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://mikeschreiber.dev/">
+  <meta property="og:description" content="Mike Schreiber's Page">
+
+  <style>
+      :root{--text-color:#444;--primary-color:#336b87;--breakpointSmall:600px}body{background:#fff;color:var(--text-color);display:flex;font-family:Verdana,sans-serif;justify-content:center;padding-bottom:60px}.pageContent{margin:0 15px;width:min(900px,100%)}a:active,a:hover,a:link,a:visited{color:var(--text-color);text-decoration:none}button{background-color:var(--primary-color);border:none;border-radius:6px;color:#fff;cursor:pointer;padding:12px}@media only screen and (min-width:900px){.pageContent{width:900px}}@media only screen and (max-width:600px){.bigScreenHeader{display:none}}nav a:before,nav a:hover{font-weight:700}nav a:before{content:attr(title);display:block;height:0;overflow:hidden;visibility:hidden}.globalHeading{display:grid;grid-template-areas:"name name" "top top" "nav nav" "bottom bottom"}.nameHeader{grid-area:name;margin:12px 0}.topSeparator{grid-area:top;width:100%}.hamburgerNav{grid-area:nav}.bottomSeparator{grid-area:bottom;width:100%}.hamburgerButton{display:none}.navLinks{display:flex;gap:1.5em;padding:12px 0}@media only screen and (max-width:800px){.globalHeading{grid-template-areas:"top top" "name nav" "bottom bottom";grid-template-columns:1fr auto}.nameHeader{font-size:24px}.hamburgerNav{display:flex;flex-direction:column;justify-content:center;position:relative}.hamburgerButton{cursor:pointer;display:block;font-size:24px}.hamburgerContent{background-color:#fff;display:none;position:absolute;right:0;top:100%;z-index:10}.hamburgerNav[active] .hamburgerContent{display:block}.navLinks{background-color:#eee;border-radius:8px;flex-direction:column;gap:0;padding:8px}.navLink{display:block;margin:8px;white-space:nowrap}}.pageContent{width:min(1000px,100%)}  </style>
+
+  <script type="module" src="/js/patterns/nav.js"></script>
+    <script type="module" src="/js/pages/hotandcold.js"></script>
+
+</head>
+
+<body>
+<div class="pageContent">
+
+
+<div class="globalHeading">
+  <h1 class="nameHeader">Mike Schreiber</h1>
+  <hr class="topSeparator">
+  <x-dropdown class="hamburgerNav">
+    <x-dropdown-toggle class="hamburgerButton">☰</x-dropdown-toggle>
+    <x-dropdown-content class="hamburgerContent">
+      <nav class="navLinks">
+            <a class="navLink" href="/" title="Home">Home</a>
+    <a class="navLink" href="/webcomponents" title="Web Components">Web Components</a>
+    <a class="navLink" href="/games" title="Games">Games</a>
+
+      </nav>
+    </x-dropdown-content>
+  </x-dropdown>
+  <hr class="bottomSeparator">
+</div><main>
+    <h3>Hot and Cold</h3>
+  <x-huntgame></x-huntgame>
+</main>
+
+</div>
+</body>
+</html>

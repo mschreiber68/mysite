@@ -1,0 +1,14 @@
+{% extends 'baseLayout.html.twig' %}
+
+{% block inlineCss %}
+  {% include 'css/hotandcold.css' %}
+{% endblock %}
+
+{% block js %}
+  <script type="module" src="/js/pages/hotandcold.js"></script>
+{% endblock %}
+
+{% block main %}
+  <h3>Hot and Cold</h3>
+  <x-huntgame></x-huntgame>
+{% endblock %}

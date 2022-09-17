@@ -1,0 +1,14 @@
+{% extends 'baseLayout.html.twig' %}
+
+{% block inlineCss %}
+  {% include 'css/mathpractice.css' %}
+{% endblock %}
+
+{% block js %}
+  <script type="module" src="/js/pages/mathpractice.js"></script>
+{% endblock %}
+
+{% block main %}
+  <h3>Math Practice</h3>
+  <x-math-practice></x-math-practice>
+{% endblock %}
