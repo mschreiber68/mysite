@@ -1,3 +1,65 @@
+class MathRaceTrack extends HTMLElement {
+    constructor() {
+        super();
+        this.attachShadow({mode: 'open'});
+        this.shadowRoot.appendChild(MathRaceTrack.template.content.cloneNode(true));
+    }
+}
+
+MathRaceTrack.template = document.createElement('template');
+MathRaceTrack.template.innerHTML = `
+<style>
+    :host {
+        display: block;
+        background-color: black;
+    }
+    .lane {
+        background-color: black;
+        height: 50px;
+    }
+    .laneDivider {
+        height: 2px;
+        background: repeating-linear-gradient(to right, yellow 0, yellow 10px, transparent 10px, transparent 20px);
+    }
+    
+</style>
+<div class="lane"></div>
+<div class="laneDivider"></div>
+<div class="lane"></div>
+<div class="laneDivider"></div>
+<div class="lane"></div>
+`;
+
+window.customElements.define('x-mathrace-track', MathRaceTrack);
+
+///////
+
+class MathRace extends HTMLElement {
+    constructor() {
+        super();
+        this.attachShadow({mode: 'open'});
+        this.shadowRoot.appendChild(MathRace.template.content.cloneNode(true));
+    }
+}
+
+MathRace.template = document.createElement('template');
+MathRace.template.innerHTML = `
+<style>
+    :host {
+        display: block;
+        background-color: lawngreen;
+        padding-top: 50px;
+    }    
+</style>
+<x-mathrace-track></x-mathrace-track>
+<div class="playArea">
+
+</div>
+`;
+
+window.customElements.define('x-mathrace', MathRace);
+
+///////////////////////////////////////////////////////////////
 
 class MathPractice extends HTMLElement {
     constructor() {
