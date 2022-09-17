@@ -167,6 +167,7 @@ class HuntGame extends HTMLElement {
 
         this.previousColorIndex = null;
         this.scoreCalculator = null;
+        this.isGameOver = false;
 
         this._initGrid();
     }
@@ -200,9 +201,14 @@ class HuntGame extends HTMLElement {
         this.textHint.textContent = '';
         this.score.textContent = '';
         this.scoreCalculator = null;
+        this.isGameOver = false;
     }
 
     _onClick(event) {
+        if (this.isGameOver) {
+            return;
+        }
+
         const square = event.composedPath().find(el => el.tagName === 'X-HUNTGAME-SQUARE');
         if (!square) {
             return;
@@ -217,6 +223,7 @@ class HuntGame extends HTMLElement {
             applySoleModifier(this.textHint, 'textHint--winner');
             this._revealAll();
             this._displayScore();
+            this.isGameOver = true;
         } else {
             const colorIndex = this._computeColorIndex(square);
             square.revealColor(COLORS[colorIndex]);
