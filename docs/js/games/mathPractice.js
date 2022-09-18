@@ -1,82 +1,105 @@
+/***********************************************
+    MathRaceTrack
+ ***********************************************/
+
 class MathRaceTrack extends HTMLElement {
+    #cpu1Car;
+    #cpu2Car;
+    #playerCar;
+    #isDone = false;
+
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
         this.shadowRoot.appendChild(MathRaceTrack.template.content.cloneNode(true));
 
-        this._cpu1 = this.shadowRoot.querySelector('.cpu1');
-        this._cpu2 = this.shadowRoot.querySelector('.cpu2');
-        this._player = this.shadowRoot.querySelector('.player');
+        this.#cpu1Car = this.shadowRoot.querySelector('.cpu1');
+        this.#cpu2Car = this.shadowRoot.querySelector('.cpu2');
+        this.#playerCar = this.shadowRoot.querySelector('.player');
+        this.#cpu1Car.playerName = 'Green';
+        this.#cpu2Car.playerName = 'Blue';
+        this.#playerCar.playerName = 'Red';
 
         this.init();
     }
 
     init() {
-        this._cpu1Pos = 0;
-        this._cpu2Pos = 0;
-        this._playerPos = 0;
-        this._cpu1.style.right = '0';
-        this._cpu2.style.right = '0';
-        this._player.style.right = '0';
-        this._done = false;
+        this.#cpu1Pos = this.#cpu2Pos = this.#playerPos = 0;
+        this.#isDone = false;
     }
 
     advanceCpu() {
-        if (this._done) {
+        if (this.#isDone) {
             return;
         }
 
-        this.cpu1Pos = this.cpu1Pos + Math.min(Math.floor(Math.random() * 4), this._cpu1.offsetLeft);
-        if (this._cpu1.offsetLeft <= 0) {
-            this.dispatchEvent(new CustomEvent('game_over', {detail: {winner: 'Green'}}))
-            this._done = true;
+        this.#cpu1Pos += MathRaceTrack.#calcCpuMove(this.#cpu1Car);
+        if (this.#checkForWin(this.#cpu1Car)) {
             return;
         }
 
-        this.cpu2Pos = this.cpu2Pos + Math.min(Math.floor(Math.random() * 4), this._cpu2.offsetLeft);
-        if (this._cpu2.offsetLeft <= 0) {
-            this.dispatchEvent(new CustomEvent('game_over', {detail: {winner: 'Blue'}}))
-            this._done = true;
-        }
+        this.#cpu2Pos += MathRaceTrack.#calcCpuMove(this.#cpu2Car);
+        this.#checkForWin(this.#cpu2Car)
     }
 
     advancePlayer() {
-        if (this._done) {
+        if (this.#isDone) {
             return;
         }
 
-        this.playerPos = this.playerPos + Math.min(35, this._player.offsetLeft);
-        if (this._player.offsetLeft <= 0) {
-            this.dispatchEvent(new CustomEvent('game_over', {detail: {winner: 'Red'}}))
-            this._done = true;
+        this.#playerPos += this.#calcPlayerMove();
+        this.#checkForWin(this.#playerCar);
+    }
+
+    static #calcCpuMove(car) {
+        const randomDistance = Math.floor(Math.random() * 4);
+        return Math.min(randomDistance, car.offsetLeft);
+    }
+
+    #calcPlayerMove() {
+        return Math.min(35, this.#playerCar.offsetLeft);
+    }
+
+    #checkForWin(car) {
+        if (car.offsetLeft <= 0) {
+            this.dispatchEvent(new CustomEvent('game_over', {detail: {winner: car.playerName}}))
+            this.#isDone = true;
+            return true;
         }
+
+        return false;
     }
 
-    get cpu1Pos() {
-        return this._cpu1Pos;
+    get #cpu1Pos() {
+        return MathRaceTrack.#getCarPos(this.#cpu1Car);
     }
 
-    set cpu1Pos(pos) {
-        this._cpu1Pos = pos;
-        this._cpu1.style.right = `${pos}px`;
+    set #cpu1Pos(pos) {
+        MathRaceTrack.#setCarPos(this.#cpu1Car, pos);
     }
 
-    get cpu2Pos() {
-        return this._cpu2Pos;
+    get #cpu2Pos() {
+        return MathRaceTrack.#getCarPos(this.#cpu2Car);
     }
 
-    set cpu2Pos(pos) {
-        this._cpu2Pos = pos;
-        this._cpu2.style.right = `${pos}px`;
+    set #cpu2Pos(pos) {
+        MathRaceTrack.#setCarPos(this.#cpu2Car, pos);
     }
 
-    get playerPos() {
-        return this._playerPos;
+    get #playerPos() {
+        return MathRaceTrack.#getCarPos(this.#playerCar);
     }
 
-    set playerPos(pos) {
-        this._playerPos = pos;
-        this._player.style.right = `${pos}px`;
+    set #playerPos(pos) {
+        MathRaceTrack.#setCarPos(this.#playerCar, pos);
+    }
+
+    static #getCarPos(car) {
+        return parseInt(getComputedStyle(car).right, 10);
+    }
+
+    static #setCarPos(car, pos) {
+        car.style.right = `${pos}px`;
     }
 }
 
@@ -116,9 +139,11 @@ MathRaceTrack.template.innerHTML = `
 </div>
 `;
 
-
-
 window.customElements.define('x-mathrace-track', MathRaceTrack);
+
+/***********************************************
+    MathRaceProblem
+ ***********************************************/
 
 class MathRaceProblem extends HTMLElement {
     constructor() {
@@ -247,6 +272,10 @@ MathRaceProblem.template.innerHTML = `
 
 window.customElements.define('x-mathrace-problem', MathRaceProblem);
 
+/***********************************************
+    MathRaceProblemTimer
+ ***********************************************/
+
 class MathRaceProblemTimer extends HTMLElement {
     #timerInterval;
     #seconds;
@@ -306,6 +335,10 @@ MathRaceProblemTimer.template.innerHTML = `
 
 window.customElements.define('x-mathrace-problemtimer', MathRaceProblemTimer);
 
+/***********************************************
+    MathRaceScore
+ ***********************************************/
+
 class MathRaceScore extends HTMLElement {
     #rightCount;
     #wrongCount;
@@ -360,6 +393,10 @@ MathRaceScore.template.innerHTML = `
 `;
 
 window.customElements.define('x-mathrace-score', MathRaceScore);
+
+/***********************************************
+    MathRace
+ ***********************************************/
 
 class MathRace extends HTMLElement {
     #breakDownCounter = 0;
