@@ -344,9 +344,9 @@ class MathRace extends HTMLElement {
     }
 
     onGameOver(event) {
+        this.problemTimer.stop();
         this.dialog.querySelector('.dialogMessage').textContent = `${event.detail.winner} Wins!`;
         this.dialog.showModal();
-        this.problemTimer.stop();
     }
 
     onCorrectAnswer(event) {
