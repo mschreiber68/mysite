@@ -7,9 +7,7 @@ class MathRaceTrack extends HTMLElement {
         this._cpu1 = this.shadowRoot.querySelector('.cpu1');
         this._cpu2 = this.shadowRoot.querySelector('.cpu2');
         this._player = this.shadowRoot.querySelector('.player');
-    }
 
-    connectedCallback() {
         this.init();
     }
 
@@ -28,16 +26,16 @@ class MathRaceTrack extends HTMLElement {
             return;
         }
 
-        this.cpu1Pos = this.cpu1Pos + Math.floor(Math.random() * 4);
+        this.cpu1Pos = this.cpu1Pos + Math.min(Math.floor(Math.random() * 4), this._cpu1.offsetLeft);
         if (this._cpu1.offsetLeft <= 0) {
-            // Emit CPU 1 wins
+            this.dispatchEvent(new CustomEvent('game_over', {detail: {winner: 'Green'}}))
             this._done = true;
             return;
         }
 
-        this.cpu2Pos = this.cpu2Pos + Math.floor(Math.random() * 4);
+        this.cpu2Pos = this.cpu2Pos + Math.min(Math.floor(Math.random() * 4), this._cpu2.offsetLeft);
         if (this._cpu2.offsetLeft <= 0) {
-            // Emit CPU 2 wins
+            this.dispatchEvent(new CustomEvent('game_over', {detail: {winner: 'Blue'}}))
             this._done = true;
         }
     }
@@ -47,9 +45,9 @@ class MathRaceTrack extends HTMLElement {
             return;
         }
 
-        this.playerPos = this.playerPos + 20;
+        this.playerPos = this.playerPos + Math.min(30, this._player.offsetLeft);
         if (this._player.offsetLeft <= 0) {
-            // Emit Player Wins
+            this.dispatchEvent(new CustomEvent('game_over', {detail: {winner: 'Red'}}))
             this._done = true;
         }
     }
@@ -145,8 +143,8 @@ class MathRaceProblem extends HTMLElement {
 
         if (this.isAnswerCorrect()) {
             this.dispatchEvent(new CustomEvent('answered_correctly'));
-            this.createNewProblem();
         } else {
+            this.dispatchEvent(new CustomEvent('answered_incorrectly'));
         }
     }
 
@@ -233,7 +231,9 @@ MathRaceProblem.template.innerHTML = `
     }
     .answerInput {
         font-size: 36px;
-        width: 3em;
+        width: 2em;
+        padding: 5px;
+        text-align: center;
     }
 </style>
 <span class="operand1"></span>
@@ -250,10 +250,13 @@ window.customElements.define('x-mathrace-problem', MathRaceProblem);
 ///////
 
 class MathRace extends HTMLElement {
+    #incorrectCount = 0;
+
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
         this.shadowRoot.appendChild(MathRace.template.content.cloneNode(true));
+        this.brokeDownContainer = this.shadowRoot.querySelector('.brokeDownContainer');
 
         /** @type MathRaceTrack */
         this.track = this.shadowRoot.querySelector('x-mathrace-track');
@@ -262,15 +265,54 @@ class MathRace extends HTMLElement {
         this.problem = this.shadowRoot.querySelector('x-mathrace-problem');
 
         this.animationInterval = null;
+        this.isBrokenDown = false;
     }
 
     connectedCallback() {
-        this.problem.addEventListener('answered_correctly', () => this.track.advancePlayer());
+        this.track.addEventListener('game_over', this.onGameOver.bind(this));
+        this.problem.addEventListener('answered_correctly', () => this.onCorrectAnswer());
+        this.problem.addEventListener('answered_incorrectly', () => this.onIncorrectAnswer());
 
         this.animationInterval = setInterval(() => this.track.advanceCpu(), 250);
     }
 
+    disconnectedCallback() {
+        clearInterval(this.animationInterval);
+    }
 
+    onGameOver(event) {
+        alert(`${event.detail.winner} Wins!`);
+    }
+
+    onCorrectAnswer(event) {
+        if (this.isBrokenDown) {
+            return;
+        }
+
+        this.track.advancePlayer();
+        this.problem.createNewProblem();
+    }
+
+    onIncorrectAnswer(event) {
+        if (this.isBrokenDown) {
+            return;
+        }
+
+        this.#incorrectCount++;
+        if (this.#incorrectCount === 3) {
+            this.breakDown();
+            this.#incorrectCount = 0;
+        }
+    }
+
+    breakDown() {
+        this.isBrokenDown = true;
+        this.brokeDownContainer.style.visibility = 'visible';
+        setTimeout(() => {
+            this.brokeDownContainer.style.visibility = 'hidden';
+            this.isBrokenDown = false;
+        }, 3000);
+    }
 }
 
 MathRace.template = document.createElement('template');
@@ -284,6 +326,25 @@ MathRace.template.innerHTML = `
     .playArea { 
         display: grid;
         grid: auto / 200px 1fr 200px;
+    }
+    .brokeDownContainer {
+        position: relative;
+        margin: 60px 0 0 40px;
+        background: white;
+        border-radius: 50%;
+        height: 90px;
+        width: 90px;
+        box-shadow: 
+            white 97.5px -22.5px 0 -7.5px,
+            white 37.5px -37.5px,
+            white 45px 15px,
+            white 90px 22.5px 0 -15px,
+            white 127.5px 7.5px 0 -7.5px;
+    }
+    .brokeDownText {
+        position: absolute;
+        left: 60px;
+        width: 120px;
     }
     .middleContainer {
         display: flex;
@@ -302,10 +363,17 @@ MathRace.template.innerHTML = `
         width: 20px;
         height: 80px;
     }
+    .brokeDownContainer {
+        visibility: hidden;
+    }
 </style>
 <x-mathrace-track></x-mathrace-track>
 <div class="playArea">
-    <div class="leftContainer"></div>
+    <div class="leftContainer">
+        <div class="brokeDownContainer">
+            <span class="brokeDownText">Oh no...<br>Red broke down</span>
+        </div>
+    </div>
     <div class="middleContainer">
         <div class="tvScreen">
             <x-mathrace-problem></x-mathrace-problem>
@@ -318,8 +386,4 @@ MathRace.template.innerHTML = `
 
 window.customElements.define('x-mathrace', MathRace);
 
-/////////////////
-
-
-///////////////////////////////////////////////////////////////
 
