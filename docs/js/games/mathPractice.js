@@ -218,7 +218,7 @@ class MathRaceProblem extends HTMLElement {
     }
 }
 
-MathRaceProblem.OP_MULT = 'x';
+MathRaceProblem.OP_MULT = '×';
 MathRaceProblem.OP_DIV = '÷';
 
 MathRaceProblem.template = document.createElement('template');
