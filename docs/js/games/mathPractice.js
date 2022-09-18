@@ -169,7 +169,7 @@ class MathRaceProblem extends HTMLElement {
     }
 
     createNewProblem() {
-        const coinFlip = MathRaceProblem.#getRandomInt(2) === 1;
+        const coinFlip = Math.random() > 0.5;
         if (coinFlip) {
             this.#createNewMultiplicationProblem();
         } else {
@@ -287,20 +287,20 @@ window.customElements.define('x-mathrace-problem', MathRaceProblem);
  ***********************************************/
 
 class MathRaceProblemTimer extends HTMLElement {
+    #secondsEl;
     #timerInterval;
-    #seconds;
 
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
         this.shadowRoot.appendChild(MathRaceProblemTimer.template.content.cloneNode(true));
-        this.#seconds = this.shadowRoot.querySelector('.seconds');
+        this.#secondsEl = this.shadowRoot.querySelector('.seconds');
     }
 
     restart() {
         this.stop();
-        this.seconds = 10;
-        this.#timerInterval = setInterval(this.decrement.bind(this), 1000);
+        this.#seconds = 10;
+        this.#timerInterval = setInterval(this.#decrement.bind(this), 1000);
     }
 
     stop() {
@@ -310,24 +310,24 @@ class MathRaceProblemTimer extends HTMLElement {
         }
     }
 
-    decrement() {
-        if (this.seconds > 0) {
-            this.seconds--;
+    #decrement() {
+        if (this.#seconds > 0) {
+            this.#seconds--;
         } else {
             this.stop();
             this.dispatchEvent(new CustomEvent('times_up'));
         }
     }
 
-    get seconds() {
-        return parseInt(this.#seconds.textContent, 10);
+    get #seconds() {
+        return parseInt(this.#secondsEl.textContent, 10);
     }
 
-    set seconds(value) {
+    set #seconds(value) {
         if (value < 10) {
             value = `0${value}`;
         }
-        this.#seconds.textContent = value;
+        this.#secondsEl.textContent = value;
     }
 }
 
@@ -379,10 +379,6 @@ class MathRaceScore extends HTMLElement {
 
     reset() {
         this.numRight = this.numWrong = 0;
-    }
-
-    get total() {
-        return this.numRight + this.numWrong;
     }
 }
 MathRaceScore.template = document.createElement('template');
