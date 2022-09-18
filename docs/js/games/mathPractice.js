@@ -45,7 +45,7 @@ class MathRaceTrack extends HTMLElement {
             return;
         }
 
-        this.playerPos = this.playerPos + Math.min(230, this._player.offsetLeft);
+        this.playerPos = this.playerPos + Math.min(35, this._player.offsetLeft);
         if (this._player.offsetLeft <= 0) {
             this.dispatchEvent(new CustomEvent('game_over', {detail: {winner: 'Red'}}))
             this._done = true;
@@ -261,13 +261,11 @@ class MathRaceProblemTimer extends HTMLElement {
     restart() {
         this.stop();
         this.seconds = 10;
-        console.log('Starting timer')
         this.#timerInterval = setInterval(this.decrement.bind(this), 1000);
     }
 
     stop() {
         if (this.#timerInterval) {
-            console.log('Stopping timer');
             clearInterval(this.#timerInterval);
             this.#timerInterval = null;
         }
