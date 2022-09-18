@@ -39,7 +39,18 @@ class MathRaceTrack extends HTMLElement {
         if (this._cpu2.offsetLeft <= 0) {
             // Emit CPU 2 wins
             this._done = true;
+        }
+    }
+
+    advancePlayer() {
+        if (this._done) {
             return;
+        }
+
+        this.playerPos = this.playerPos + 20;
+        if (this._player.offsetLeft <= 0) {
+            // Emit Player Wins
+            this._done = true;
         }
     }
 
@@ -59,6 +70,15 @@ class MathRaceTrack extends HTMLElement {
     set cpu2Pos(pos) {
         this._cpu2Pos = pos;
         this._cpu2.style.right = `${pos}px`;
+    }
+
+    get playerPos() {
+        return this._playerPos;
+    }
+
+    set playerPos(pos) {
+        this._playerPos = pos;
+        this._player.style.right = `${pos}px`;
     }
 }
 
@@ -102,52 +122,11 @@ MathRaceTrack.template.innerHTML = `
 
 window.customElements.define('x-mathrace-track', MathRaceTrack);
 
-///////
-
-class MathRace extends HTMLElement {
+class MathRaceProblem extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
-        this.shadowRoot.appendChild(MathRace.template.content.cloneNode(true));
-
-        /** @type MathRaceTrack */
-        this.track = this.shadowRoot.querySelector('x-mathrace-track');
-        this.animationInterval = null;
-    }
-
-    connectedCallback() {
-        this.animationInterval = setInterval(() => this.track.advanceCpu(), 250);
-    }
-}
-
-MathRace.template = document.createElement('template');
-MathRace.template.innerHTML = `
-<style>
-    :host {
-        display: block;
-        background-color: lawngreen;
-        padding-top: 50px;
-    }    
-</style>
-<x-mathrace-track></x-mathrace-track>
-<div class="playArea">
-
-</div>
-`;
-
-window.customElements.define('x-mathrace', MathRace);
-
-/////////////////
-
-
-
-///////////////////////////////////////////////////////////////
-
-class MathPractice extends HTMLElement {
-    constructor() {
-        super();
-        this.attachShadow({mode: 'open'});
-        this.shadowRoot.appendChild(MathPractice.template.content.cloneNode(true));
+        this.shadowRoot.appendChild(MathRaceProblem.template.content.cloneNode(true));
 
         this._operand1 = this.shadowRoot.querySelector('.operand1');
         this._operator = this.shadowRoot.querySelector('.operator');
@@ -165,9 +144,9 @@ class MathPractice extends HTMLElement {
         event.preventDefault();
 
         if (this.isAnswerCorrect()) {
+            this.dispatchEvent(new CustomEvent('answered_correctly'));
             this.createNewProblem();
         } else {
-            alert('Wrong!');
         }
     }
 
@@ -184,15 +163,15 @@ class MathPractice extends HTMLElement {
     createNewMultiplicationProblem() {
         this.op1 = this.generateRandomNumber(12);
         this.op2 = this.generateRandomNumber(12);
-        this.operator = MathPractice.OP_MULT;
+        this.operator = MathRaceProblem.OP_MULT;
     }
-    
+
     createNewDivisionProblem() {
         const divisor = this.generateRandomNumber(10);
         const quotient = this.generateRandomNumber(10);
         this.op1 = divisor * quotient;
         this.op2 = divisor;
-        this.operator = MathPractice.OP_DIV;
+        this.operator = MathRaceProblem.OP_DIV;
     }
 
     generateRandomNumber(max) {
@@ -206,11 +185,11 @@ class MathPractice extends HTMLElement {
     set op1(value) {
         this._operand1.textContent = value;
     }
-    
+
     get operator() {
         return this._operator.textContent;
     }
-    
+
     set operator(value) {
         this._operator.textContent = value;
     }
@@ -232,20 +211,20 @@ class MathPractice extends HTMLElement {
     }
 
     isAnswerCorrect() {
-        if (this.operator === MathPractice.OP_MULT)
+        if (this.operator === MathRaceProblem.OP_MULT)
         {
             return this.op1 * this.op2 === this.answer;
         }
-        
+
         return this.op1 / this.op2 === this.answer;
     }
 }
 
-MathPractice.OP_MULT = 'x';
-MathPractice.OP_DIV = '÷';
+MathRaceProblem.OP_MULT = 'x';
+MathRaceProblem.OP_DIV = '÷';
 
-MathPractice.template = document.createElement('template');
-MathPractice.template.innerHTML = `
+MathRaceProblem.template = document.createElement('template');
+MathRaceProblem.template.innerHTML = `
 <style>
     :host {
         display: flex;
@@ -266,4 +245,53 @@ MathPractice.template.innerHTML = `
 </form>
 `;
 
-window.customElements.define('x-math-practice', MathPractice);
+window.customElements.define('x-mathrace-problem', MathRaceProblem);
+
+///////
+
+class MathRace extends HTMLElement {
+    constructor() {
+        super();
+        this.attachShadow({mode: 'open'});
+        this.shadowRoot.appendChild(MathRace.template.content.cloneNode(true));
+
+        /** @type MathRaceTrack */
+        this.track = this.shadowRoot.querySelector('x-mathrace-track');
+
+        /** @type MathRaceProblem **/
+        this.problem = this.shadowRoot.querySelector('x-mathrace-problem');
+
+        this.animationInterval = null;
+    }
+
+    connectedCallback() {
+        this.problem.addEventListener('answered_correctly', () => this.track.advancePlayer());
+
+        this.animationInterval = setInterval(() => this.track.advanceCpu(), 250);
+    }
+
+
+}
+
+MathRace.template = document.createElement('template');
+MathRace.template.innerHTML = `
+<style>
+    :host {
+        display: block;
+        background-color: lawngreen;
+        padding-top: 50px;
+    }    
+</style>
+<x-mathrace-track></x-mathrace-track>
+<div class="playArea">
+    <x-mathrace-problem></x-mathrace-problem>
+</div>
+`;
+
+window.customElements.define('x-mathrace', MathRace);
+
+/////////////////
+
+
+///////////////////////////////////////////////////////////////
+
