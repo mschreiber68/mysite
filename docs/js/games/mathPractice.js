@@ -247,7 +247,61 @@ MathRaceProblem.template.innerHTML = `
 
 window.customElements.define('x-mathrace-problem', MathRaceProblem);
 
-///////
+class MathRaceProblemTimer extends HTMLElement {
+    #timerInterval;
+    #seconds;
+
+    constructor() {
+        super();
+        this.attachShadow({mode: 'open'});
+        this.shadowRoot.appendChild(MathRaceProblemTimer.template.content.cloneNode(true));
+        this.#seconds = this.shadowRoot.querySelector('.seconds');
+    }
+
+    restart() {
+        this.stop();
+        this.seconds = 10;
+        this.#timerInterval = setInterval(this.decrement.bind(this), 1000);
+    }
+
+    stop() {
+        clearInterval(this.#timerInterval);
+    }
+
+    decrement() {
+        if (this.seconds > 0) {
+            this.seconds--;
+        } else {
+            this.stop();
+            this.dispatchEvent(new CustomEvent('times_up'));
+        }
+    }
+
+    get seconds() {
+        return parseInt(this.#seconds.textContent, 10);
+    }
+
+    set seconds(value) {
+        if (value < 10) {
+            value = `0${value}`;
+        }
+        this.#seconds.textContent = value;
+    }
+}
+
+MathRaceProblemTimer.template = document.createElement('template');
+MathRaceProblemTimer.template.innerHTML = `
+<style>
+    :host {
+        font-size: 12px;
+    }
+</style>
+<span>
+    :<span class="seconds"></span>
+</span>
+`;
+
+window.customElements.define('x-mathrace-problemtimer', MathRaceProblemTimer);
 
 class MathRace extends HTMLElement {
     #incorrectCount = 0;
@@ -268,6 +322,9 @@ class MathRace extends HTMLElement {
         /** @type MathRaceProblem **/
         this.problem = this.shadowRoot.querySelector('x-mathrace-problem');
 
+        /** @type MathRaceProblemTimer */
+        this.problemTimer = this.shadowRoot.querySelector('x-mathrace-problemtimer');
+
         this.animationInterval = null;
         this.isBrokenDown = false;
     }
@@ -276,8 +333,10 @@ class MathRace extends HTMLElement {
         this.track.addEventListener('game_over', this.onGameOver.bind(this));
         this.problem.addEventListener('answered_correctly', () => this.onCorrectAnswer());
         this.problem.addEventListener('answered_incorrectly', () => this.onIncorrectAnswer());
+        this.problemTimer.addEventListener('times_up', this.onTimesUp.bind(this))
 
         this.animationInterval = setInterval(() => this.track.advanceCpu(), 250);
+        this.problemTimer.restart();
     }
 
     disconnectedCallback() {
@@ -287,6 +346,7 @@ class MathRace extends HTMLElement {
     onGameOver(event) {
         this.dialog.querySelector('.dialogMessage').textContent = `${event.detail.winner} Wins!`;
         this.dialog.showModal();
+        this.problemTimer.stop();
     }
 
     onCorrectAnswer(event) {
@@ -296,6 +356,7 @@ class MathRace extends HTMLElement {
 
         this.track.advancePlayer();
         this.problem.createNewProblem();
+        this.problemTimer.restart();
     }
 
     onIncorrectAnswer(event) {
@@ -312,17 +373,28 @@ class MathRace extends HTMLElement {
         }
     }
 
+    onTimesUp() {
+        this.problem.answer = '';
+        this.problem.createNewProblem();
+        this.problemTimer.restart();
+    }
+
     breakDown() {
         this.isBrokenDown = true;
         this.brokeDownContainer.style.visibility = 'visible';
+        this.problemTimer.stop();
         setTimeout(() => {
             this.brokeDownContainer.style.visibility = 'hidden';
             this.isBrokenDown = false;
+            this.problem.createNewProblem();
+            this.problemTimer.restart();
         }, 3000);
     }
 
     onDialogClose() {
         this.track.init();
+        this.problem.createNewProblem();
+        this.problemTimer.restart();
     }
 }
 
@@ -367,7 +439,7 @@ MathRace.template.innerHTML = `
         border: 15px solid grey;
         border-radius: 15px;
         background-color: white;
-        padding: 20px;
+        padding: 20px 20px 10px;
     }
     .tvStand {
         background-color: #555;
@@ -388,6 +460,7 @@ MathRace.template.innerHTML = `
     <div class="middleContainer">
         <div class="tvScreen">
             <x-mathrace-problem></x-mathrace-problem>
+            <x-mathrace-problemtimer></x-mathrace-problemtimer>
         </div>
         <div class="tvStand"></div>
     </div>
