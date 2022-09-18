@@ -280,11 +280,39 @@ MathRace.template.innerHTML = `
         display: block;
         background-color: lawngreen;
         padding-top: 50px;
-    }    
+    }
+    .playArea { 
+        display: grid;
+        grid: auto / 200px 1fr 200px;
+    }
+    .middleContainer {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 75px;
+    }
+    .tvScreen {
+        border: 15px solid grey;
+        border-radius: 15px;
+        background-color: white;
+        padding: 20px;
+    }
+    .tvStand {
+        background-color: #555;
+        width: 20px;
+        height: 80px;
+    }
 </style>
 <x-mathrace-track></x-mathrace-track>
 <div class="playArea">
-    <x-mathrace-problem></x-mathrace-problem>
+    <div class="leftContainer"></div>
+    <div class="middleContainer">
+        <div class="tvScreen">
+            <x-mathrace-problem></x-mathrace-problem>
+        </div>
+        <div class="tvStand"></div>
+    </div>
+    <div class="rightContainer"></div>
 </div>
 `;
 
