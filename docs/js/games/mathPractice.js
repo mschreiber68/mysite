@@ -146,100 +146,110 @@ window.customElements.define('x-mathrace-track', MathRaceTrack);
  ***********************************************/
 
 class MathRaceProblem extends HTMLElement {
+    #op1El;
+    #operatorEl;
+    #op2El;
+    #form;
+    #answerInput;
+
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
         this.shadowRoot.appendChild(MathRaceProblem.template.content.cloneNode(true));
 
-        this._operand1 = this.shadowRoot.querySelector('.operand1');
-        this._operator = this.shadowRoot.querySelector('.operator');
-        this._operand2 = this.shadowRoot.querySelector('.operand2');
-        this._form = this.shadowRoot.querySelector('form');
-        this._answerInput = this.shadowRoot.querySelector('.answerInput');
-    }
+        this.#op1El = this.shadowRoot.querySelector('.operand1');
+        this.#operatorEl = this.shadowRoot.querySelector('.operator');
+        this.#op2El = this.shadowRoot.querySelector('.operand2');
+        this.#form = this.shadowRoot.querySelector('form');
+        this.#answerInput = this.shadowRoot.querySelector('.answerInput');
 
-    connectedCallback() {
+        this.#form.addEventListener('submit', this.#onFormSubmit.bind(this));
+
         this.createNewProblem();
-        this._form.addEventListener('submit', this.onFormSubmit.bind(this))
     }
 
-    onFormSubmit(event) {
+    createNewProblem() {
+        const coinFlip = MathRaceProblem.#getRandomInt(2) === 1;
+        if (coinFlip) {
+            this.#createNewMultiplicationProblem();
+        } else {
+            this.#createNewDivisionProblem();
+        }
+
+        this.clearAnswer();
+    }
+
+    clearAnswer() {
+        this.#answer = '';
+    }
+
+    #onFormSubmit(event) {
         event.preventDefault();
 
-        if (this.isAnswerCorrect()) {
+        if (this.#isAnswerCorrect()) {
             this.dispatchEvent(new CustomEvent('answered_correctly'));
         } else {
             this.dispatchEvent(new CustomEvent('answered_incorrectly'));
         }
     }
 
-    createNewProblem() {
-        if (this.generateRandomNumber(2) === 1) {
-            this.createNewMultiplicationProblem();
-        } else {
-            this.createNewDivisionProblem();
-        }
-
-        this.answer = '';
+    #createNewMultiplicationProblem() {
+        this.#op1 = MathRaceProblem.#getRandomInt(12);
+        this.#op2 = MathRaceProblem.#getRandomInt(12);
+        this.#operator = MathRaceProblem.OP_MULT;
     }
 
-    createNewMultiplicationProblem() {
-        this.op1 = this.generateRandomNumber(12);
-        this.op2 = this.generateRandomNumber(12);
-        this.operator = MathRaceProblem.OP_MULT;
+    #createNewDivisionProblem() {
+        const divisor = MathRaceProblem.#getRandomInt(10);
+        const quotient = MathRaceProblem.#getRandomInt(10);
+        this.#op1 = divisor * quotient;
+        this.#op2 = divisor;
+        this.#operator = MathRaceProblem.OP_DIV;
     }
 
-    createNewDivisionProblem() {
-        const divisor = this.generateRandomNumber(10);
-        const quotient = this.generateRandomNumber(10);
-        this.op1 = divisor * quotient;
-        this.op2 = divisor;
-        this.operator = MathRaceProblem.OP_DIV;
+    static #getRandomInt(max) {
+        return Math.ceil(Math.random() * max);
     }
 
-    generateRandomNumber(max) {
-        return Math.floor(Math.random() * max + 1);
+    get #op1() {
+        return parseInt(this.#op1El.textContent, 10);
     }
 
-    get op1() {
-        return parseInt(this._operand1.textContent, 10);
+    set #op1(value) {
+        this.#op1El.textContent = value;
     }
 
-    set op1(value) {
-        this._operand1.textContent = value;
+    get #operator() {
+        return this.#operatorEl.textContent;
     }
 
-    get operator() {
-        return this._operator.textContent;
+    set #operator(value) {
+        this.#operatorEl.textContent = value;
     }
 
-    set operator(value) {
-        this._operator.textContent = value;
+    get #op2() {
+        return parseInt(this.#op2El.textContent, 10);
     }
 
-    get op2() {
-        return parseInt(this._operand2.textContent, 10);
+    set #op2(value) {
+        this.#op2El.textContent = value;
     }
 
-    set op2(value) {
-        this._operand2.textContent = value;
+    get #answer() {
+        return parseInt(this.#answerInput.value, 10);
     }
 
-    get answer() {
-        return parseInt(this._answerInput.value, 10);
+    set #answer(value) {
+        this.#answerInput.value = value;
     }
 
-    set answer(value) {
-        this._answerInput.value = value;
-    }
-
-    isAnswerCorrect() {
-        if (this.operator === MathRaceProblem.OP_MULT)
+    #isAnswerCorrect() {
+        if (this.#operator === MathRaceProblem.OP_MULT)
         {
-            return this.op1 * this.op2 === this.answer;
+            return this.#op1 * this.#op2 === this.#answer;
         }
 
-        return this.op1 / this.op2 === this.answer;
+        return this.#op1 / this.#op2 === this.#answer;
     }
 }
 
@@ -482,7 +492,7 @@ class MathRace extends HTMLElement {
             return;
         }
 
-        this.problem.answer = '';
+        this.problem.clearAnswer();
 
         if (!this.#answeredWrong) {
             this.#answeredWrong = true;
