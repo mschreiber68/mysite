@@ -258,6 +258,10 @@ class MathRace extends HTMLElement {
         this.shadowRoot.appendChild(MathRace.template.content.cloneNode(true));
         this.brokeDownContainer = this.shadowRoot.querySelector('.brokeDownContainer');
 
+        /** @type HTMLDialogElement */
+        this.dialog = this.shadowRoot.querySelector('dialog');
+        this.dialog.addEventListener('close', this.onDialogClose.bind(this));
+
         /** @type MathRaceTrack */
         this.track = this.shadowRoot.querySelector('x-mathrace-track');
 
@@ -281,7 +285,8 @@ class MathRace extends HTMLElement {
     }
 
     onGameOver(event) {
-        alert(`${event.detail.winner} Wins!`);
+        this.dialog.querySelector('.dialogMessage').textContent = `${event.detail.winner} Wins!`;
+        this.dialog.showModal();
     }
 
     onCorrectAnswer(event) {
@@ -312,6 +317,10 @@ class MathRace extends HTMLElement {
             this.brokeDownContainer.style.visibility = 'hidden';
             this.isBrokenDown = false;
         }, 3000);
+    }
+
+    onDialogClose() {
+        this.track.init();
     }
 }
 
@@ -382,6 +391,9 @@ MathRace.template.innerHTML = `
     </div>
     <div class="rightContainer"></div>
 </div>
+<dialog>
+    <div class="dialogMessage"></div>
+</dialog>
 `;
 
 window.customElements.define('x-mathrace', MathRace);
