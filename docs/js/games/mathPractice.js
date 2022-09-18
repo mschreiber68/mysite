@@ -405,120 +405,119 @@ window.customElements.define('x-mathrace-score', MathRaceScore);
  ***********************************************/
 
 class MathRace extends HTMLElement {
+    /** @type MathRaceTrack */
+    #track;
+    /** @type MathRaceProblem **/
+    #problem;
+    /** @type MathRaceProblemTimer */
+    #problemTimer;
+    /** @type MathRaceScore */
+    #score;
+    /** @type HTMLDialogElement */
+    #dialog;
+    #brokeDownContainer;
     #breakDownCounter = 0;
     #answeredWrong = false;
+    #animationInterval;
+    #isBrokenDown = false;
 
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
         this.shadowRoot.appendChild(MathRace.template.content.cloneNode(true));
-        this.brokeDownContainer = this.shadowRoot.querySelector('.brokeDownContainer');
 
-        /** @type HTMLDialogElement */
-        this.dialog = this.shadowRoot.querySelector('dialog');
-        this.dialog.addEventListener('close', this.onDialogClose.bind(this));
+        this.#track = this.shadowRoot.querySelector('x-mathrace-track');
+        this.#problem = this.shadowRoot.querySelector('x-mathrace-problem');
+        this.#problemTimer = this.shadowRoot.querySelector('x-mathrace-problemtimer');
+        this.#score = this.shadowRoot.querySelector('x-mathrace-score');
+        this.#dialog = this.shadowRoot.querySelector('dialog');
+        this.#brokeDownContainer = this.shadowRoot.querySelector('.brokeDownContainer');
 
-        /** @type MathRaceTrack */
-        this.track = this.shadowRoot.querySelector('x-mathrace-track');
-
-        /** @type MathRaceProblem **/
-        this.problem = this.shadowRoot.querySelector('x-mathrace-problem');
-
-        /** @type MathRaceProblemTimer */
-        this.problemTimer = this.shadowRoot.querySelector('x-mathrace-problemtimer');
-
-        /** @type MathRaceScore */
-        this.score = this.shadowRoot.querySelector('x-mathrace-score');
-
-        this.animationInterval = null;
-        this.isBrokenDown = false;
-
+        this.#track.addEventListener('game_over', this.#onGameOver.bind(this));
+        this.#problem.addEventListener('answered_correctly', this.#onCorrectAnswer.bind(this));
+        this.#problem.addEventListener('answered_incorrectly', this.#onIncorrectAnswer.bind(this));
+        this.#problemTimer.addEventListener('times_up', this.#onTimesUp.bind(this))
+        this.#dialog.addEventListener('close', this.#onDialogClose.bind(this));
     }
 
     connectedCallback() {
-        this.track.addEventListener('game_over', this.onGameOver.bind(this));
-        this.problem.addEventListener('answered_correctly', () => this.onCorrectAnswer());
-        this.problem.addEventListener('answered_incorrectly', () => this.onIncorrectAnswer());
-        this.problemTimer.addEventListener('times_up', this.onTimesUp.bind(this))
-
-        this.animationInterval = setInterval(() => this.track.advanceCpu(), 250);
-
-        this.startNewGame();
+        this.#startNewGame();
     }
 
-    disconnectedCallback() {
-        clearInterval(this.animationInterval);
+    #startNewGame() {
+        this.#startNewProblem();
+        this.#track.init();
+        this.#score.reset();
+        this.#animationInterval = setInterval(() => this.#track.advanceCpu(), 250);
     }
 
-    startNewGame() {
-        this.startNewProblem();
-        this.track.init();
-        this.score.reset();
-    }
-
-    startNewProblem() {
-        this.problem.createNewProblem();
-        this.problemTimer.restart();
+    #startNewProblem() {
+        this.#problem.createNewProblem();
+        this.#problemTimer.restart();
         this.#answeredWrong = false;
     }
 
-    onGameOver(event) {
-        this.problemTimer.stop();
-        this.dialog.querySelector('.dialogMessage').textContent = `${event.detail.winner} Wins!`;
-        this.dialog.showModal();
+    #onGameOver(event) {
+        if (this.#animationInterval) {
+            clearInterval(this.#animationInterval);
+            this.#animationInterval = null;
+        }
+        this.#problemTimer.stop();
+        this.#dialog.querySelector('.dialogMessage').textContent = `${event.detail.winner} Wins!`;
+        this.#dialog.showModal();
     }
 
-    onCorrectAnswer(event) {
-        if (this.isBrokenDown) {
+    #onCorrectAnswer() {
+        if (this.#isBrokenDown) {
             return;
         }
 
         if (this.#answeredWrong) {
             this.#answeredWrong = false;
         } else {
-            this.score.numRight++;
+            this.#score.numRight++;
         }
 
-        this.startNewProblem();
-        this.track.advancePlayer();
+        this.#startNewProblem();
+        this.#track.advancePlayer();
     }
 
-    onIncorrectAnswer(event) {
-        if (this.isBrokenDown) {
+    #onIncorrectAnswer() {
+        if (this.#isBrokenDown) {
             return;
         }
 
-        this.problem.clearAnswer();
+        this.#problem.clearAnswer();
 
         if (!this.#answeredWrong) {
             this.#answeredWrong = true;
-            this.score.numWrong++;
+            this.#score.numWrong++;
         }
 
         this.#breakDownCounter++;
         if (this.#breakDownCounter === 3) {
-            this.breakDown();
+            this.#breakDown();
             this.#breakDownCounter = 0;
         }
     }
 
-    onTimesUp() {
-        this.startNewProblem();
+    #onTimesUp() {
+        this.#startNewProblem();
     }
 
-    breakDown() {
-        this.isBrokenDown = true;
-        this.brokeDownContainer.style.visibility = 'visible';
-        this.problemTimer.stop();
+    #breakDown() {
+        this.#isBrokenDown = true;
+        this.#brokeDownContainer.style.visibility = 'visible';
+        this.#problemTimer.stop();
         setTimeout(() => {
-            this.brokeDownContainer.style.visibility = 'hidden';
-            this.isBrokenDown = false;
-            this.startNewProblem();
+            this.#brokeDownContainer.style.visibility = 'hidden';
+            this.#isBrokenDown = false;
+            this.#startNewProblem();
         }, 3000);
     }
 
-    onDialogClose() {
-        this.startNewGame();
+    #onDialogClose() {
+        this.#startNewGame();
     }
 }
 
