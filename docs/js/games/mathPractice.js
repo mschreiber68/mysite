@@ -303,6 +303,8 @@ class MathRace extends HTMLElement {
             return;
         }
 
+        this.problem.answer = '';
+
         this.#incorrectCount++;
         if (this.#incorrectCount === 3) {
             this.breakDown();

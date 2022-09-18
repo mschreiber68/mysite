@@ -5,7 +5,29 @@
 {% endblock %}
 
 {% block main %}
-  <a href="/hotandcold">Hot and Cold</a>
-  <br><br>
-  <a href="/mathpractice">Math Practice</a>
+  <a href="/hotandcold" class="gameContainer">
+    <div class="imageContainer">
+      <img src="/images/hotandcold.png">
+    </div>
+    <div class="description">
+      <h3>Hot and Cold</h3>
+      <div>
+        Click around the grid to find the winning square.
+        Colors will tell you if you're getting warmer or colder.
+      </div>
+    </div>
+  </a>
+
+  <a href="/mathpractice" class="gameContainer">
+    <div class="imageContainer">
+      <img src="/images/mathpractice.png">
+    </div>
+    <div class="description">
+      <h3>Math Practice</h3>
+      <div>
+        Practice multiplication and division.
+        Designed by Elizabeth.
+      </div>
+    </div>
+  </a>
 {% endblock %}
