@@ -45,7 +45,7 @@ class MathRaceTrack extends HTMLElement {
             return;
         }
 
-        this.playerPos = this.playerPos + Math.min(30, this._player.offsetLeft);
+        this.playerPos = this.playerPos + Math.min(230, this._player.offsetLeft);
         if (this._player.offsetLeft <= 0) {
             this.dispatchEvent(new CustomEvent('game_over', {detail: {winner: 'Red'}}))
             this._done = true;
@@ -261,11 +261,16 @@ class MathRaceProblemTimer extends HTMLElement {
     restart() {
         this.stop();
         this.seconds = 10;
+        console.log('Starting timer')
         this.#timerInterval = setInterval(this.decrement.bind(this), 1000);
     }
 
     stop() {
-        clearInterval(this.#timerInterval);
+        if (this.#timerInterval) {
+            console.log('Stopping timer');
+            clearInterval(this.#timerInterval);
+            this.#timerInterval = null;
+        }
     }
 
     decrement() {
@@ -303,8 +308,64 @@ MathRaceProblemTimer.template.innerHTML = `
 
 window.customElements.define('x-mathrace-problemtimer', MathRaceProblemTimer);
 
+class MathRaceScore extends HTMLElement {
+    #rightCount;
+    #wrongCount;
+
+    constructor() {
+        super();
+        this.attachShadow({mode: 'open'});
+        this.shadowRoot.appendChild(MathRaceScore.template.content.cloneNode(true));
+        this.#rightCount = this.shadowRoot.querySelector('.rightCount');
+        this.#wrongCount = this.shadowRoot.querySelector('.wrongCount');
+    }
+
+    get numRight() {
+        return parseInt(this.#rightCount.textContent, 10);
+    }
+
+    set numRight(value) {
+        this.#rightCount.textContent = value;
+    }
+
+    get numWrong() {
+        return parseInt(this.#wrongCount.textContent, 10);
+    }
+
+    set numWrong(value) {
+        this.#wrongCount.textContent = value;
+    }
+
+    reset() {
+        this.numRight = this.numWrong = 0;
+    }
+
+    get total() {
+        return this.numRight + this.numWrong;
+    }
+}
+MathRaceScore.template = document.createElement('template');
+MathRaceScore.template.innerHTML = `
+<style>
+    :host {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+    }
+</style>
+<div>
+    <span class="rightCount">0</span> Right
+</div>
+<div>
+    <span class="wrongCount">0</span> Wrong
+</div>
+`;
+
+window.customElements.define('x-mathrace-score', MathRaceScore);
+
 class MathRace extends HTMLElement {
-    #incorrectCount = 0;
+    #breakDownCounter = 0;
+    #answeredWrong = false;
 
     constructor() {
         super();
@@ -325,8 +386,12 @@ class MathRace extends HTMLElement {
         /** @type MathRaceProblemTimer */
         this.problemTimer = this.shadowRoot.querySelector('x-mathrace-problemtimer');
 
+        /** @type MathRaceScore */
+        this.score = this.shadowRoot.querySelector('x-mathrace-score');
+
         this.animationInterval = null;
         this.isBrokenDown = false;
+
     }
 
     connectedCallback() {
@@ -336,11 +401,24 @@ class MathRace extends HTMLElement {
         this.problemTimer.addEventListener('times_up', this.onTimesUp.bind(this))
 
         this.animationInterval = setInterval(() => this.track.advanceCpu(), 250);
-        this.problemTimer.restart();
+
+        this.startNewGame();
     }
 
     disconnectedCallback() {
         clearInterval(this.animationInterval);
+    }
+
+    startNewGame() {
+        this.startNewProblem();
+        this.track.init();
+        this.score.reset();
+    }
+
+    startNewProblem() {
+        this.problem.createNewProblem();
+        this.problemTimer.restart();
+        this.#answeredWrong = false;
     }
 
     onGameOver(event) {
@@ -354,9 +432,14 @@ class MathRace extends HTMLElement {
             return;
         }
 
+        if (this.#answeredWrong) {
+            this.#answeredWrong = false;
+        } else {
+            this.score.numRight++;
+        }
+
+        this.startNewProblem();
         this.track.advancePlayer();
-        this.problem.createNewProblem();
-        this.problemTimer.restart();
     }
 
     onIncorrectAnswer(event) {
@@ -366,17 +449,20 @@ class MathRace extends HTMLElement {
 
         this.problem.answer = '';
 
-        this.#incorrectCount++;
-        if (this.#incorrectCount === 3) {
+        if (!this.#answeredWrong) {
+            this.#answeredWrong = true;
+            this.score.numWrong++;
+        }
+
+        this.#breakDownCounter++;
+        if (this.#breakDownCounter === 3) {
             this.breakDown();
-            this.#incorrectCount = 0;
+            this.#breakDownCounter = 0;
         }
     }
 
     onTimesUp() {
-        this.problem.answer = '';
-        this.problem.createNewProblem();
-        this.problemTimer.restart();
+        this.startNewProblem();
     }
 
     breakDown() {
@@ -386,15 +472,12 @@ class MathRace extends HTMLElement {
         setTimeout(() => {
             this.brokeDownContainer.style.visibility = 'hidden';
             this.isBrokenDown = false;
-            this.problem.createNewProblem();
-            this.problemTimer.restart();
+            this.startNewProblem();
         }, 3000);
     }
 
     onDialogClose() {
-        this.track.init();
-        this.problem.createNewProblem();
-        this.problemTimer.restart();
+        this.startNewGame();
     }
 }
 
@@ -439,12 +522,15 @@ MathRace.template.innerHTML = `
         border: 15px solid grey;
         border-radius: 15px;
         background-color: white;
-        padding: 20px 20px 10px;
+        padding: 10px 20px;
     }
     .tvStand {
         background-color: #555;
         width: 20px;
         height: 80px;
+    }
+    x-mathrace-score {
+        margin-bottom: 15px;
     }
     .brokeDownContainer {
         visibility: hidden;
@@ -459,6 +545,7 @@ MathRace.template.innerHTML = `
     </div>
     <div class="middleContainer">
         <div class="tvScreen">
+            <x-mathrace-score></x-mathrace-score>
             <x-mathrace-problem></x-mathrace-problem>
             <x-mathrace-problemtimer></x-mathrace-problemtimer>
         </div>
