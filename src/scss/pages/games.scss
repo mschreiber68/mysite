@@ -3,8 +3,9 @@
 
 .gameContainer {
     display: flex;
+    flex-wrap: wrap;
     gap: 15px;
-    margin: 50px 0;
+    margin: 60px 0;
 
     .imageContainer {
         flex: 1;
@@ -16,6 +17,7 @@
 
     .description {
         flex: 1;
+        min-width: 350px;
 
         h3 {
             margin-top: 0;
