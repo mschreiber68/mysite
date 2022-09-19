@@ -528,10 +528,18 @@ MathRace.template.innerHTML = `
         display: block;
         background-color: lawngreen;
         padding-top: 50px;
+        min-width: 530px;
     }
     .playArea { 
         display: grid;
-        grid: auto / 200px 1fr 200px;
+        grid: auto / 200px 320px auto;
+        
+
+    }
+    @media screen and (min-width: 720px) {
+        .playArea {
+            grid: auto / 200px 1fr 200px;
+        }
     }
     .brokeDownContainer {
         position: relative;
