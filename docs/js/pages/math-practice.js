@@ -1,0 +1,1 @@
+import '../games/math-practice.js';
