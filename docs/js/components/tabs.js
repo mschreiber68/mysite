@@ -92,18 +92,17 @@ const KEYCODE = {
 }
 
 class Tabs extends HTMLElement {
-
     connectedCallback() {
         this.#linkPanelsAria();
         this.addEventListener('click', this.#onClick);
         this.addEventListener('keydown', this.#onKeyDown);
     }
 
-    #getTabs() {
+    get #tabs() {
         return [...this.#tabList.querySelectorAll('x-tab')];
     }
 
-    #getPanels() {
+    get #panels() {
         return [...this.querySelectorAll('x-tab-panel')];
     }
 
@@ -112,11 +111,7 @@ class Tabs extends HTMLElement {
     }
 
     get #selectedTab() {
-        return this.#getTabs().find(tab => tab.selected);
-    }
-
-    get #selectedTabIndex() {
-        return this.#getTabs().findIndex(tab => tab.selected);
+        return this.#tabs.find(tab => tab.selected);
     }
 
     get #selectedTabPanel() {
@@ -128,8 +123,8 @@ class Tabs extends HTMLElement {
     }
 
     #linkPanelsAria() {
-        const tabs = this.#getTabs();
-        const panels = this.#getPanels();
+        const tabs = this.#tabs;
+        const panels = this.#panels;
 
         tabs.forEach((tab, i) => {
             if (i < panels.length) {
@@ -152,26 +147,26 @@ class Tabs extends HTMLElement {
     }
 
     #selectFirstTab() {
-        const tabs = this.#getTabs();
+        const tabs = this.#tabs;
         this.#selectTab(tabs[0]);
     }
 
     #selectPreviousTab() {
-        const tabs = this.#getTabs();
+        const tabs = this.#tabs;
         const previousIndex = tabs.findIndex(tab => tab.selected) - 1;
         const previousTab = tabs[(previousIndex + tabs.length) % tabs.length];
         this.#selectTab(previousTab);
     }
 
     #selectNextTab() {
-        const tabs = this.#getTabs();
+        const tabs = this.#tabs;
         const nextIndex = tabs.findIndex(tab => tab.selected) + 1;
         const nextTab = tabs[nextIndex % tabs.length];
         this.#selectTab(nextTab);
     }
 
     #selectLastTab() {
-        const tabs = this.#getTabs();
+        const tabs = this.#tabs;
         this.#selectTab(tabs.length - 1);
     }
 
@@ -181,10 +176,10 @@ class Tabs extends HTMLElement {
     }
 
     #reset() {
-        const tabs = this.#getTabs();
+        const tabs = this.#tabs;
         tabs.forEach(tab => tab.selected = false);
 
-        const panels = this.#getPanels();
+        const panels = this.#panels;
         panels.forEach(panel => panel.hidden = true);
     }
 
