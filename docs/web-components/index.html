@@ -20,7 +20,8 @@
   <script type="module" src="/js/patterns/nav.js"></script>
       <script type="module" src="/js/pages/web-components.js"></script>
 
-</head>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script></head>
 
 <body>
 <div class="pageContent">
@@ -49,38 +50,75 @@
         They can then be 100% styled by the project that uses them.
     </p>
 
+    
     <h3 class="demoHeader">Tabs</h3>
-    <x-tabs class="tabsDemo">
-        <div class="tabRow">
-            <x-tab>Tab 1</x-tab>
-            <x-tab>Tab 2</x-tab>
-            <x-tab>Tab 3</x-tab>
-        </div>
-        <x-tab-panel>Panel 1</x-tab-panel>
-        <x-tab-panel>Panel 2</x-tab-panel>
-        <x-tab-panel>Panel 3</x-tab-panel>
-    </x-tabs>
+    <x-code>        &lt;x-tabs class=&quot;tabsDemo&quot;&gt;
+            &lt;div class=&quot;tabRow&quot;&gt;
+                &lt;x-tab&gt;Tab 1&lt;/x-tab&gt;
+                &lt;x-tab&gt;Tab 2&lt;/x-tab&gt;
+                &lt;x-tab&gt;Tab 3&lt;/x-tab&gt;
+            &lt;/div&gt;
+            &lt;x-tab-panel&gt;Panel 1&lt;/x-tab-panel&gt;
+            &lt;x-tab-panel&gt;Panel 2&lt;/x-tab-panel&gt;
+            &lt;x-tab-panel&gt;Panel 3&lt;/x-tab-panel&gt;
+        &lt;/x-tabs&gt;
+    </x-code>
+            <x-tabs class="tabsDemo">
+            <div class="tabRow">
+                <x-tab>Tab 1</x-tab>
+                <x-tab>Tab 2</x-tab>
+                <x-tab>Tab 3</x-tab>
+            </div>
+            <x-tab-panel>Panel 1</x-tab-panel>
+            <x-tab-panel>Panel 2</x-tab-panel>
+            <x-tab-panel>Panel 3</x-tab-panel>
+        </x-tabs>
+    
 
+    
     <h3 class="demoHeader">Modal</h3>
-    <button onclick="document.querySelector('x-modal').active = true">Show Modal</button>
-    <x-modal>
-        <x-modal-content>
-            <div>A Modal</div>
-            <x-modal-dismiss>X</x-modal-dismiss>
-        </x-modal-content>
-    </x-modal>
+    <x-code>        &lt;button onclick=&quot;document.querySelector(&#039;x-modal&#039;).active = true&quot;&gt;Show Modal&lt;/button&gt;
+        &lt;x-modal&gt;
+            &lt;x-modal-content&gt;
+                &lt;div&gt;A Modal&lt;/div&gt;
+                &lt;x-modal-dismiss&gt;X&lt;/x-modal-dismiss&gt;
+            &lt;/x-modal-content&gt;
+        &lt;/x-modal&gt;
+    </x-code>
+            <button onclick="document.querySelector('x-modal').active = true">Show Modal</button>
+        <x-modal>
+            <x-modal-content>
+                <div>A Modal</div>
+                <x-modal-dismiss>X</x-modal-dismiss>
+            </x-modal-content>
+        </x-modal>
+    
 
+    
     <h3 class="demoHeader">Dropdown</h3>
-    <x-dropdown class="dropdownDemo">
-        <x-dropdown-toggle>Click for Fruit</x-dropdown-toggle>
-        <x-dropdown-content>
-            <ul>
-                <li>Apple</li>
-                <li>Banana</li>
-                <li>Orange</li>
-            </ul>
-        </x-dropdown-content>
-    </x-dropdown>
+    <x-code>        &lt;x-dropdown class=&quot;dropdownDemo&quot;&gt;
+            &lt;x-dropdown-toggle&gt;Click for Fruit&lt;/x-dropdown-toggle&gt;
+            &lt;x-dropdown-content&gt;
+                &lt;ul&gt;
+                    &lt;li&gt;Apple&lt;/li&gt;
+                    &lt;li&gt;Banana&lt;/li&gt;
+                    &lt;li&gt;Orange&lt;/li&gt;
+                &lt;/ul&gt;
+            &lt;/x-dropdown-content&gt;
+        &lt;/x-dropdown&gt;
+    </x-code>
+            <x-dropdown class="dropdownDemo">
+            <x-dropdown-toggle>Click for Fruit</x-dropdown-toggle>
+            <x-dropdown-content>
+                <ul>
+                    <li>Apple</li>
+                    <li>Banana</li>
+                    <li>Orange</li>
+                </ul>
+            </x-dropdown-content>
+        </x-dropdown>
+    
+
 </main>
 
 </div>

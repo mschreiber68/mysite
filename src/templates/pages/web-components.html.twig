@@ -8,6 +8,10 @@
     <script type="module" src="/js/pages/web-components.js"></script>
 {% endblock %}
 
+{% block lib %}
+    {% include 'lib/highlightjs.html.twig' %}
+{% endblock %}
+
 {% block main %}
     <p>
         Lately I have been interested in Web Components.
@@ -15,36 +19,52 @@
         They can then be 100% styled by the project that uses them.
     </p>
 
+    {% set tabDemo %}
+        <x-tabs class="tabsDemo">
+            <div class="tabRow">
+                <x-tab>Tab 1</x-tab>
+                <x-tab>Tab 2</x-tab>
+                <x-tab>Tab 3</x-tab>
+            </div>
+            <x-tab-panel>Panel 1</x-tab-panel>
+            <x-tab-panel>Panel 2</x-tab-panel>
+            <x-tab-panel>Panel 3</x-tab-panel>
+        </x-tabs>
+    {% endset %}
+
     <h3 class="demoHeader">Tabs</h3>
-    <x-tabs class="tabsDemo">
-        <div class="tabRow">
-            <x-tab>Tab 1</x-tab>
-            <x-tab>Tab 2</x-tab>
-            <x-tab>Tab 3</x-tab>
-        </div>
-        <x-tab-panel>Panel 1</x-tab-panel>
-        <x-tab-panel>Panel 2</x-tab-panel>
-        <x-tab-panel>Panel 3</x-tab-panel>
-    </x-tabs>
+    <x-code>{{ tabDemo|e }}</x-code>
+    {{ tabDemo }}
+
+    {% set modalDemo %}
+        <button onclick="document.querySelector('x-modal').active = true">Show Modal</button>
+        <x-modal>
+            <x-modal-content>
+                <div>A Modal</div>
+                <x-modal-dismiss>X</x-modal-dismiss>
+            </x-modal-content>
+        </x-modal>
+    {% endset %}
 
     <h3 class="demoHeader">Modal</h3>
-    <button onclick="document.querySelector('x-modal').active = true">Show Modal</button>
-    <x-modal>
-        <x-modal-content>
-            <div>A Modal</div>
-            <x-modal-dismiss>X</x-modal-dismiss>
-        </x-modal-content>
-    </x-modal>
+    <x-code>{{ modalDemo|e }}</x-code>
+    {{ modalDemo }}
+
+    {% set dropdownDemo %}
+        <x-dropdown class="dropdownDemo">
+            <x-dropdown-toggle>Click for Fruit</x-dropdown-toggle>
+            <x-dropdown-content>
+                <ul>
+                    <li>Apple</li>
+                    <li>Banana</li>
+                    <li>Orange</li>
+                </ul>
+            </x-dropdown-content>
+        </x-dropdown>
+    {% endset %}
 
     <h3 class="demoHeader">Dropdown</h3>
-    <x-dropdown class="dropdownDemo">
-        <x-dropdown-toggle>Click for Fruit</x-dropdown-toggle>
-        <x-dropdown-content>
-            <ul>
-                <li>Apple</li>
-                <li>Banana</li>
-                <li>Orange</li>
-            </ul>
-        </x-dropdown-content>
-    </x-dropdown>
+    <x-code>{{ dropdownDemo|e }}</x-code>
+    {{ dropdownDemo }}
+
 {% endblock %}
