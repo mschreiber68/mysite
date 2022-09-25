@@ -109,9 +109,7 @@ class Tabs extends HTMLElement {
     }
 
     #selectTab(tab) {
-        if (tab.selected) {
-            return;
-        }
+        if (tab.selected) return;
 
         this.#reset();
 
