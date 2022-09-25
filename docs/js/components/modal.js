@@ -4,6 +4,7 @@
 
 class ModalContent extends HTMLElement {
     connectedCallback() {
+        this.setAttribute('role', 'dialog');
         this.setAttribute('aria-modal', 'true');
     }
 }
@@ -17,9 +18,7 @@ window.customElements.define('x-modal-content', ModalContent);
 class ModalDismiss extends HTMLElement {
 
     connectedCallback() {
-        if (!this.hasAttribute('role')) {
-            this.setAttribute('role', 'button');
-        }
+        this.setAttribute('role', 'button');
         this.addEventListener('click', this.#onClick.bind(this));
     }
 
@@ -63,14 +62,6 @@ class Modal extends HTMLElement {
         this.#upgradeProperty('active');
     }
 
-    #upgradeProperty(prop) {
-        if (this.hasOwnProperty(prop)) {
-            let value = this[prop];
-            delete this[prop];
-            this[prop] = value;
-        }
-    }
-
     #onClick(event) {
          if (event.target === this) {
              this.active = false;
@@ -80,6 +71,14 @@ class Modal extends HTMLElement {
     #onModalDismissClick(event) {
         event.stopPropagation();
         this.active = false;
+    }
+
+    #upgradeProperty(prop) {
+        if (this.hasOwnProperty(prop)) {
+            let value = this[prop];
+            delete this[prop];
+            this[prop] = value;
+        }
     }
 }
 

@@ -67,7 +67,7 @@
   <p>
     The Tabs components only define behavior; there is no CSS or Shadow DOM used.
     This allows client code to customize every aspect of the visual design based on the dynamic attribute behavior.
-    Limiting scope also allowed me to focus on fully supporting the <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/tab_role#example">ARIA</a> specification for tabs.
+    Limiting scope also allowed me to focus on supporting the <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/tab_role#example">ARIA specification for tabs</a>.
   </p>
   <p>
     Besides the expected ARIA attribute updates, the following is the component behavior:
@@ -83,6 +83,17 @@
       When a <code>Tab</code> is selected, <code>Tabs</code> will dispatch the <code>tab-select</code> event.
     </li>
   </ul>
+  <p>
+    There's a few features I still need to add
+  </p>
+  <ul>
+    <li>Keyboard controls</li>
+    <li>
+      Support for dynamically adding and removing <code>Tabs</code> and <code>TabPanels</code>.
+      I haven't encountered a use case for this, but it might be fun to add someday.
+    </li>
+  </ul>
+
   <x-code language="javascript">/***********************************************
     Tab 
  ***********************************************/
