@@ -32,7 +32,7 @@
   <p>
     Tabs are made up of a set of four components:
   </p>
-    <ul>
+    <ol>
       <li>
         <code>Tab</code> - A single tab.
       </li>
@@ -45,7 +45,7 @@
       <li>
         <code>Tabs</code> - The top-level component containing <code>Tab</code>, <code>TabList</code>, and <code>TabPanel</code> components.
       </li>
-    </ul>
+    </ol>
   <p>
     The Tabs components only define behavior; there is no CSS or Shadow DOM used.
     This allows client code to customize every aspect of the visual design based on the dynamic attribute behavior.
@@ -66,7 +66,19 @@
     </li>
   </ul>
   <p>
-    There's a few features I still need to add
+    Tips for usage:
+  </p>
+  <ul>
+    <li>
+      When building the DOM, add the <code>selected</code> attribute to the active <code>Tab</code>, and the <code>hidden</code> attribute to the inactive <code>TabPanels</code>.
+    </li>
+    <li>
+      If the tabs are vertical instead of horizontal, add the <code>aria-orientation="vertical"</code> attribute to the <code>TabList</code>.
+      This will ensure keyboard controls adapt to work as expected.
+    </li>
+  </ul>
+  <p>
+    There's a few features I still need to add:
   </p>
   <ul>
     <li>
