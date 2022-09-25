@@ -10,17 +10,12 @@ body {
     font-family: Verdana, sans-serif;
     color: var(--text-color);
     background: #fff;
-    padding-bottom: 60px;
+    padding-bottom: 80px;
 }
 
 .pageContent {
     width: min(900px, 100%);
     margin: 0 15px;
-}
-
-a:link, a:visited, a:hover, a:active {
-    color: var(--text-color);
-    text-decoration: none;
 }
 
 button {

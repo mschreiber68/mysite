@@ -30,3 +30,11 @@
         }
     }
 }
+
+a.gameContainer:active,
+a.gameContainer:hover,
+a.gameContainer:link,
+a.gameContainer:visited {
+    color: var(--text-color);
+    text-decoration: none;
+}

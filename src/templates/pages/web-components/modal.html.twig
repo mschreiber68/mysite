@@ -1,0 +1,31 @@
+{% extends 'base-layout.html.twig' %}
+
+{% block inlineCss %}
+  {% include 'css/modal.css' %}
+{% endblock %}
+
+{% block js %}
+  <script type="module" src="/js/components/modal.js"></script>
+  <script type="module" src="/js/components/code.js"></script>
+{% endblock %}
+
+{% block lib %}
+  {% include 'lib/highlightjs.html.twig' %}
+{% endblock %}
+
+{% set modalDemo %}
+<button onclick="document.querySelector('x-modal').active = true">Show Modal</button>
+<x-modal>
+  <x-modal-content>
+    <div>A Modal</div>
+    <x-modal-dismiss>X</x-modal-dismiss>
+  </x-modal-content>
+</x-modal>
+{% endset %}
+
+{% block main %}
+  <h2>Modal</h2>
+  <x-code>{{ modalDemo|e }}</x-code>
+  <x-code>{% include 'patterns/_modal-demo.scss' %}</x-code>
+  {{ modalDemo }}
+{% endblock %}

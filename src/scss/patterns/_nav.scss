@@ -51,6 +51,14 @@ nav a::before {
     padding: 12px 0;
 }
 
+a.navLink:active,
+a.navLink:hover,
+a.navLink:link,
+a.navLink:visited {
+    color: var(--text-color);
+    text-decoration: none;
+}
+
 @media only screen and (max-width: 800px) {
     .globalHeading {
         grid-template-columns: 1fr auto;

@@ -1,0 +1,34 @@
+{% extends 'base-layout.html.twig' %}
+
+{% block inlineCss %}
+  {% include 'css/dropdown.css' %}
+{% endblock %}
+
+{% block js %}
+  <script type="module" src="/js/components/dropdown.js"></script>
+  <script type="module" src="/js/components/code.js"></script>
+{% endblock %}
+
+{% block lib %}
+  {% include 'lib/highlightjs.html.twig' %}
+{% endblock %}
+
+{% set dropdownDemo %}
+<x-dropdown class="dropdownDemo">
+  <x-dropdown-toggle>Click for Fruit</x-dropdown-toggle>
+  <x-dropdown-content>
+    <ul>
+      <li>Apple</li>
+      <li>Banana</li>
+      <li>Orange</li>
+    </ul>
+  </x-dropdown-content>
+</x-dropdown>
+{% endset %}
+
+{% block main %}
+  <h2>Dropdown</h2>
+  <x-code>{{ dropdownDemo|e }}</x-code>
+  <x-code>{% include 'patterns/_dropdown-demo.scss' %}</x-code>
+  {{ dropdownDemo }}
+{% endblock %}

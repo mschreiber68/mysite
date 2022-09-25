@@ -22,7 +22,12 @@ foreach ($rii as $file) {
     }
 }
 
-$twigLoader = new FilesystemLoader([__DIR__ . '/src/templates', __DIR__ . '/build']);
+$twigLoader = new FilesystemLoader([
+    __DIR__ . '/src/templates',
+    __DIR__ . '/build',
+    __DIR__ . '/docs/js',
+    __DIR__ . '/src/scss'
+]);
 $twig = new Environment($twigLoader);
 
 foreach ($names as $name) {

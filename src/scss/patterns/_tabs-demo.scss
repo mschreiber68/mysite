@@ -4,8 +4,8 @@
     }
 
     x-tab {
-        padding: 12px 32px;
         cursor: pointer;
+        padding: 12px 32px;
 
         &[selected] {
             border-bottom: 3px solid var(--primary-color);

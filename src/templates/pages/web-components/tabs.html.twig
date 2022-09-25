@@ -1,0 +1,35 @@
+{% extends 'base-layout.html.twig' %}
+
+{% block inlineCss %}
+  {% include 'css/tabs.css' %}
+{% endblock %}
+
+{% block js %}
+  <script type="module" src="/js/components/tabs.js"></script>
+  <script type="module" src="/js/components/code.js"></script>
+{% endblock %}
+
+{% block lib %}
+  {% include 'lib/highlightjs.html.twig' %}
+{% endblock %}
+
+{% set tabDemo %}
+<x-tabs class="tabsDemo">
+  <div class="tabRow">
+    <x-tab>Tab 1</x-tab>
+    <x-tab>Tab 2</x-tab>
+    <x-tab>Tab 3</x-tab>
+  </div>
+  <x-tab-panel>Panel 1</x-tab-panel>
+  <x-tab-panel>Panel 2</x-tab-panel>
+  <x-tab-panel>Panel 3</x-tab-panel>
+</x-tabs>
+{% endset %}
+
+{% block main %}
+  <h2>Tabs</h2>
+  <h3>Demo</h3>
+  <x-code>{{ tabDemo|e }}</x-code>
+  <x-code>{% include 'patterns/_tabs-demo.scss' %}</x-code>
+  {{ tabDemo }}
+{% endblock %}
