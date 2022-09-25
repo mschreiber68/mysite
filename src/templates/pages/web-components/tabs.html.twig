@@ -15,11 +15,11 @@
 
 {% set tabDemo %}
 <x-tabs class="tabsDemo">
-  <div class="tabRow">
+  <x-tab-list>
     <x-tab>Tab 1</x-tab>
     <x-tab selected>Tab 2</x-tab>
     <x-tab>Tab 3</x-tab>
-  </div>
+  </x-tab-list>
   <x-tab-panel hidden>Panel 1</x-tab-panel>
   <x-tab-panel>Panel 2</x-tab-panel>
   <x-tab-panel hidden>Panel 3</x-tab-panel>
@@ -30,22 +30,26 @@
   <h2>Tabs</h2>
   <h3>Components</h3>
   <p>
-    Tabs are made up of a set of three components:
+    Tabs are made up of a set of four components:
   </p>
     <ul>
       <li>
         <code>Tab</code> - A single tab.
       </li>
       <li>
+        <code>TabList</code> - A container for <code>Tabs</code>.
+      </li>
+      <li>
         <code>TabPanel</code> - A container of content that is visible when its corresponding <code>Tab</code> is selected.
       </li>
       <li>
-        <code>Tabs</code> - The top-level component containing <code>Tab</code> and <code>TabPanel</code> components.
+        <code>Tabs</code> - The top-level component containing <code>Tab</code>, <code>TabList</code>, and <code>TabPanel</code> components.
       </li>
     </ul>
   <p>
     The Tabs components only define behavior; there is no CSS or Shadow DOM used.
     This allows client code to customize every aspect of the visual design based on the dynamic attribute behavior.
+    Limiting scope also allowed me to focus on fully supporting the <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/tab_role#example">ARIA</a> specification for tabs.
   </p>
   <p>
     Besides the expected ARIA attribute updates, the following is the component behavior:
@@ -58,7 +62,7 @@
       The currently inactive <code>TabPanels</code> will have the <code>hidden</code> attribute.
     </li>
     <li>
-      When a <code>Tab</code> is selected, <code>Tabs</code> will dispatch the <code>tab-selected</code> event.
+      When a <code>Tab</code> is selected, <code>Tabs</code> will dispatch the <code>tab-select</code> event.
     </li>
   </ul>
   <x-code language="javascript">{% include 'components/tabs.js' %}</x-code>
@@ -66,6 +70,7 @@
   <h3>Demo</h3>
   <p>
     The demo below shows how to leverage the dynamic attribute behavior to implement a custom UX.
+    Inspect the demo using your browser's dev tools to see the attribute changes in action.
   </p>
   <x-code>{{ tabDemo|e }}</x-code>
   <x-code>{% include 'patterns/_tabs-demo.scss' %}</x-code>

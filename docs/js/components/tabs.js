@@ -21,20 +21,20 @@ class Tab extends HTMLElement {
     }
 
     attributeChangedCallback() {
-        const value = this.hasAttribute('selected');
-        this.setAttribute('aria-selected', value.toString());
-        this.setAttribute('tabindex', value ? '0' : '-1');
+        this.#updateAriaAttrs();
     }
 
     connectedCallback() {
-        if (!this.id) {
-            this.id = `tab-${++tabCounter}`;
-        }
+        this.id ||= `tab-${++tabCounter}`;
 
         this.setAttribute('role', 'tab');
-        this.setAttribute('aria-selected', 'false');
-        this.setAttribute('tabindex', '-1');
+        this.#updateAriaAttrs();
         this.#upgradeProperty('selected');
+    }
+
+    #updateAriaAttrs() {
+        this.setAttribute('aria-selected', this.selected.toString());
+        this.setAttribute('tabindex', this.selected ? '0' : '-1');
     }
 
     #upgradeProperty(prop) {
@@ -49,6 +49,18 @@ class Tab extends HTMLElement {
 window.customElements.define('x-tab', Tab);
 
 /***********************************************
+    TabList
+ ***********************************************/
+
+class TabList extends HTMLElement {
+    connectedCallback() {
+        this.setAttribute('role', 'tablist');
+    }
+}
+
+window.customElements.define('x-tab-list', TabList);
+
+/***********************************************
     TabPanel
  ***********************************************/
 
@@ -56,10 +68,10 @@ let panelCounter = 0;
 
 class TabPanel extends HTMLElement {
     connectedCallback() {
-        if (!this.id) {
-            this.id = `tab-panel-${++panelCounter}`;
-        }
+        this.id ||= `tab-panel-${++panelCounter}`;
+
         this.setAttribute('role', 'tabpanel');
+        this.setAttribute('tabindex', '0');
     }
 }
 
@@ -70,18 +82,14 @@ window.customElements.define('x-tab-panel', TabPanel);
  ***********************************************/
 
 class Tabs extends HTMLElement {
+
     connectedCallback() {
-        if (!this.hasAttribute('role')) {
-            this.setAttribute('role', 'tablist');
-        }
-
         this.addEventListener('click', this.#onClick.bind(this));
-
         this.#linkPanelsAria();
     }
 
     #getTabs() {
-        return [...this.querySelectorAll('x-tab')];
+        return [...this.querySelector('x-tab-list').querySelectorAll('x-tab')];
     }
 
     #getPanels() {
@@ -109,7 +117,7 @@ class Tabs extends HTMLElement {
         this.#getPanelForTab(tab).hidden = false;
         tab.focus();
 
-        this.dispatchEvent(new CustomEvent('tab-selected', { detail: { tab } }))
+        this.dispatchEvent(new CustomEvent('tab-select', { detail: { tab } }))
     }
 
     #getPanelForTab(tab) {

@@ -15,7 +15,7 @@
   <meta property="og:description" content="Mike Schreiber's Page">
 
   <style>
-      :root{--text-color:#444;--primary-color:#336b87;--breakpointSmall:600px}body{background:#fff;color:var(--text-color);display:flex;font-family:Verdana,sans-serif;justify-content:center;padding-bottom:80px}.pageContent{margin:0 15px;width:min(900px,100%)}button{background-color:var(--primary-color);border:none;border-radius:6px;color:#fff;cursor:pointer;padding:12px}@media only screen and (min-width:900px){.pageContent{width:900px}}@media only screen and (max-width:600px){.bigScreenHeader{display:none}}a.textLink{text-decoration:underline}nav a:before,nav a:hover{font-weight:700}nav a:before{content:attr(title);display:block;height:0;overflow:hidden;visibility:hidden}.globalHeading{display:grid;grid-template-areas:"name name" "top top" "nav nav" "bottom bottom"}.nameHeader{grid-area:name;margin:12px 0}.topSeparator{grid-area:top;width:100%}.hamburgerNav{grid-area:nav}.bottomSeparator{grid-area:bottom;width:100%}.hamburgerButton{display:none}.navLinks{display:flex;gap:1.5em;padding:12px 0}a.navLink:active,a.navLink:hover,a.navLink:link,a.navLink:visited{color:var(--text-color);text-decoration:none}@media only screen and (max-width:800px){.globalHeading{grid-template-areas:"top top" "name nav" "bottom bottom";grid-template-columns:1fr auto}.nameHeader{font-size:24px}.hamburgerNav{display:flex;flex-direction:column;justify-content:center;position:relative}.hamburgerButton{cursor:pointer;display:block;font-size:24px}.hamburgerContent{background-color:#fff;display:none;position:absolute;right:0;top:100%;z-index:10}.hamburgerNav[active] .hamburgerContent{display:block}.navLinks{background-color:#eee;border-radius:8px;flex-direction:column;gap:0;padding:8px}.navLink{display:block;margin:8px;white-space:nowrap}}.tabsDemo .tabRow{display:flex}.tabsDemo x-tab{cursor:pointer;padding:12px 32px}.tabsDemo x-tab[selected]{border-bottom:3px solid var(--primary-color)}.tabsDemo x-tab-panel{display:block;padding:12px}.tabsDemo x-tab-panel[hidden]{display:none}ul code{font-size:1rem}  </style>
+      :root{--text-color:#444;--primary-color:#336b87;--breakpointSmall:600px}body{background:#fff;color:var(--text-color);display:flex;font-family:Verdana,sans-serif;justify-content:center;line-height:1.5em;padding-bottom:80px}.pageContent{margin:0 15px;width:min(900px,100%)}button{background-color:var(--primary-color);border:none;border-radius:6px;color:#fff;cursor:pointer;padding:12px}@media only screen and (min-width:900px){.pageContent{width:900px}}@media only screen and (max-width:600px){.bigScreenHeader{display:none}}a.textLink{text-decoration:underline}nav a:before,nav a:hover{font-weight:700}nav a:before{content:attr(title);display:block;height:0;overflow:hidden;visibility:hidden}.globalHeading{display:grid;grid-template-areas:"name name" "top top" "nav nav" "bottom bottom"}.nameHeader{grid-area:name;margin:12px 0}.topSeparator{grid-area:top;width:100%}.hamburgerNav{grid-area:nav}.bottomSeparator{grid-area:bottom;width:100%}.hamburgerButton{display:none}.navLinks{display:flex;gap:1.5em;padding:12px 0}a.navLink:active,a.navLink:hover,a.navLink:link,a.navLink:visited{color:var(--text-color);text-decoration:none}@media only screen and (max-width:800px){.globalHeading{grid-template-areas:"top top" "name nav" "bottom bottom";grid-template-columns:1fr auto}.nameHeader{font-size:24px}.hamburgerNav{display:flex;flex-direction:column;justify-content:center;position:relative}.hamburgerButton{cursor:pointer;display:block;font-size:24px}.hamburgerContent{background-color:#fff;display:none;position:absolute;right:0;top:100%;z-index:10}.hamburgerNav[active] .hamburgerContent{display:block}.navLinks{background-color:#eee;border-radius:8px;flex-direction:column;gap:0;padding:8px}.navLink{display:block;margin:8px;white-space:nowrap}}.tabsDemo x-tab-list{display:flex}.tabsDemo x-tab-list x-tab{cursor:pointer;padding:12px 32px}.tabsDemo x-tab-list x-tab[selected]{border-bottom:3px solid var(--primary-color)}.tabsDemo x-tab-panel{display:block;padding:12px}.tabsDemo x-tab-panel[hidden]{display:none}ul code{font-size:1rem}  </style>
 
   <script type="module" src="/js/patterns/nav.js"></script>
     <script type="module" src="/js/components/tabs.js"></script>
@@ -48,22 +48,26 @@
     <h2>Tabs</h2>
   <h3>Components</h3>
   <p>
-    Tabs are made up of a set of three components:
+    Tabs are made up of a set of four components:
   </p>
     <ul>
       <li>
         <code>Tab</code> - A single tab.
       </li>
       <li>
+        <code>TabList</code> - A container for <code>Tabs</code>.
+      </li>
+      <li>
         <code>TabPanel</code> - A container of content that is visible when its corresponding <code>Tab</code> is selected.
       </li>
       <li>
-        <code>Tabs</code> - The top-level component containing <code>Tab</code> and <code>TabPanel</code> components.
+        <code>Tabs</code> - The top-level component containing <code>Tab</code>, <code>TabList</code>, and <code>TabPanel</code> components.
       </li>
     </ul>
   <p>
     The Tabs components only define behavior; there is no CSS or Shadow DOM used.
     This allows client code to customize every aspect of the visual design based on the dynamic attribute behavior.
+    Limiting scope also allowed me to focus on fully supporting the <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/tab_role#example">ARIA</a> specification for tabs.
   </p>
   <p>
     Besides the expected ARIA attribute updates, the following is the component behavior:
@@ -76,7 +80,7 @@
       The currently inactive <code>TabPanels</code> will have the <code>hidden</code> attribute.
     </li>
     <li>
-      When a <code>Tab</code> is selected, <code>Tabs</code> will dispatch the <code>tab-selected</code> event.
+      When a <code>Tab</code> is selected, <code>Tabs</code> will dispatch the <code>tab-select</code> event.
     </li>
   </ul>
   <x-code language="javascript">/***********************************************
@@ -102,20 +106,20 @@ class Tab extends HTMLElement {
     }
 
     attributeChangedCallback() {
-        const value = this.hasAttribute('selected');
-        this.setAttribute('aria-selected', value.toString());
-        this.setAttribute('tabindex', value ? '0' : '-1');
+        this.#updateAriaAttrs();
     }
 
     connectedCallback() {
-        if (!this.id) {
-            this.id = `tab-${++tabCounter}`;
-        }
+        this.id ||= `tab-${++tabCounter}`;
 
         this.setAttribute('role', 'tab');
-        this.setAttribute('aria-selected', 'false');
-        this.setAttribute('tabindex', '-1');
+        this.#updateAriaAttrs();
         this.#upgradeProperty('selected');
+    }
+
+    #updateAriaAttrs() {
+        this.setAttribute('aria-selected', this.selected.toString());
+        this.setAttribute('tabindex', this.selected ? '0' : '-1');
     }
 
     #upgradeProperty(prop) {
@@ -130,6 +134,18 @@ class Tab extends HTMLElement {
 window.customElements.define('x-tab', Tab);
 
 /***********************************************
+    TabList
+ ***********************************************/
+
+class TabList extends HTMLElement {
+    connectedCallback() {
+        this.setAttribute('role', 'tablist');
+    }
+}
+
+window.customElements.define('x-tab-list', TabList);
+
+/***********************************************
     TabPanel
  ***********************************************/
 
@@ -137,10 +153,10 @@ let panelCounter = 0;
 
 class TabPanel extends HTMLElement {
     connectedCallback() {
-        if (!this.id) {
-            this.id = `tab-panel-${++panelCounter}`;
-        }
+        this.id ||= `tab-panel-${++panelCounter}`;
+
         this.setAttribute('role', 'tabpanel');
+        this.setAttribute('tabindex', '0');
     }
 }
 
@@ -151,18 +167,14 @@ window.customElements.define('x-tab-panel', TabPanel);
  ***********************************************/
 
 class Tabs extends HTMLElement {
+
     connectedCallback() {
-        if (!this.hasAttribute('role')) {
-            this.setAttribute('role', 'tablist');
-        }
-
         this.addEventListener('click', this.#onClick.bind(this));
-
         this.#linkPanelsAria();
     }
 
     #getTabs() {
-        return [...this.querySelectorAll('x-tab')];
+        return [...this.querySelector('x-tab-list').querySelectorAll('x-tab')];
     }
 
     #getPanels() {
@@ -190,7 +202,7 @@ class Tabs extends HTMLElement {
         this.#getPanelForTab(tab).hidden = false;
         tab.focus();
 
-        this.dispatchEvent(new CustomEvent('tab-selected', { detail: { tab } }))
+        this.dispatchEvent(new CustomEvent('tab-select', { detail: { tab } }))
     }
 
     #getPanelForTab(tab) {
@@ -218,29 +230,30 @@ window.customElements.define('x-tabs', Tabs);</x-code>
   <h3>Demo</h3>
   <p>
     The demo below shows how to leverage the dynamic attribute behavior to implement a custom UX.
+    Inspect the demo using your browser's dev tools to see the attribute changes in action.
   </p>
   <x-code>&lt;x-tabs class=&quot;tabsDemo&quot;&gt;
-  &lt;div class=&quot;tabRow&quot;&gt;
+  &lt;x-tab-list&gt;
     &lt;x-tab&gt;Tab 1&lt;/x-tab&gt;
     &lt;x-tab selected&gt;Tab 2&lt;/x-tab&gt;
     &lt;x-tab&gt;Tab 3&lt;/x-tab&gt;
-  &lt;/div&gt;
+  &lt;/x-tab-list&gt;
   &lt;x-tab-panel hidden&gt;Panel 1&lt;/x-tab-panel&gt;
   &lt;x-tab-panel&gt;Panel 2&lt;/x-tab-panel&gt;
   &lt;x-tab-panel hidden&gt;Panel 3&lt;/x-tab-panel&gt;
 &lt;/x-tabs&gt;
 </x-code>
   <x-code>.tabsDemo {
-    .tabRow {
+    x-tab-list {
         display: flex;
-    }
 
-    x-tab {
-        cursor: pointer;
-        padding: 12px 32px;
+        x-tab {
+            cursor: pointer;
+            padding: 12px 32px;
 
-        &[selected] {
-            border-bottom: 3px solid var(--primary-color);
+            &[selected] {
+                border-bottom: 3px solid var(--primary-color);
+            }
         }
     }
 
@@ -254,11 +267,11 @@ window.customElements.define('x-tabs', Tabs);</x-code>
     }
 }</x-code>
   <x-tabs class="tabsDemo">
-  <div class="tabRow">
+  <x-tab-list>
     <x-tab>Tab 1</x-tab>
     <x-tab selected>Tab 2</x-tab>
     <x-tab>Tab 3</x-tab>
-  </div>
+  </x-tab-list>
   <x-tab-panel hidden>Panel 1</x-tab-panel>
   <x-tab-panel>Panel 2</x-tab-panel>
   <x-tab-panel hidden>Panel 3</x-tab-panel>

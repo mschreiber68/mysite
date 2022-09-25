@@ -1,14 +1,14 @@
 .tabsDemo {
-    .tabRow {
+    x-tab-list {
         display: flex;
-    }
 
-    x-tab {
-        cursor: pointer;
-        padding: 12px 32px;
+        x-tab {
+            cursor: pointer;
+            padding: 12px 32px;
 
-        &[selected] {
-            border-bottom: 3px solid var(--primary-color);
+            &[selected] {
+                border-bottom: 3px solid var(--primary-color);
+            }
         }
     }
 

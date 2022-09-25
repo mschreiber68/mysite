@@ -1,3 +1,7 @@
+/***********************************************
+    ModalContent
+ ***********************************************/
+
 class ModalContent extends HTMLElement {
     connectedCallback() {
         this.setAttribute('aria-modal', 'true');
@@ -6,27 +10,29 @@ class ModalContent extends HTMLElement {
 
 window.customElements.define('x-modal-content', ModalContent);
 
+/***********************************************
+    ModalDismiss
+ ***********************************************/
+
 class ModalDismiss extends HTMLElement {
-    constructor() {
-        super();
-        this._onClick = this._onClick.bind(this);
-    }
 
     connectedCallback() {
         if (!this.hasAttribute('role')) {
             this.setAttribute('role', 'button');
         }
-        this.addEventListener('click', this._onClick);
+        this.addEventListener('click', this.#onClick.bind(this));
     }
 
-    _onClick(event) {
-        this.dispatchEvent(new CustomEvent('modal-dismiss-click', {
-            bubbles: true,
-        }));
+    #onClick(event) {
+        this.dispatchEvent(new CustomEvent('modal-dismiss-click', {bubbles: true}));
     }
 }
 
 window.customElements.define('x-modal-dismiss', ModalDismiss);
+
+/***********************************************
+    Modal
+ ***********************************************/
 
 class Modal extends HTMLElement {
     static get observedAttributes() {
@@ -51,19 +57,13 @@ class Modal extends HTMLElement {
         }
     }
 
-    constructor() {
-        super();
-        this._onClick = this._onClick.bind(this);
-        this._onModalDismissClick = this._onModalDismissClick.bind(this);
-    }
-
     connectedCallback() {
-        this._upgradeProperty('active');
-        this.addEventListener('click', this._onClick);
-        this.addEventListener('modal-dismiss-click', this._onModalDismissClick);
+        this.addEventListener('click', this.#onClick.bind(this));
+        this.addEventListener('modal-dismiss-click', this.#onModalDismissClick.bind(this));
+        this.#upgradeProperty('active');
     }
 
-    _upgradeProperty(prop) {
+    #upgradeProperty(prop) {
         if (this.hasOwnProperty(prop)) {
             let value = this[prop];
             delete this[prop];
@@ -71,13 +71,13 @@ class Modal extends HTMLElement {
         }
     }
 
-    _onClick(event) {
+    #onClick(event) {
          if (event.target === this) {
              this.active = false;
          }
     }
 
-    _onModalDismissClick(event) {
+    #onModalDismissClick(event) {
         event.stopPropagation();
         this.active = false;
     }
