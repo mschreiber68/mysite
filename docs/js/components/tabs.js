@@ -81,19 +81,50 @@ window.customElements.define('x-tab-panel', TabPanel);
     Tabs
  ***********************************************/
 
+const KEYCODE = {
+    TAB: 9,
+    END: 35,
+    HOME: 36,
+    LEFT: 37,
+    UP: 38,
+    RIGHT: 39,
+    DOWN: 40,
+}
+
 class Tabs extends HTMLElement {
 
     connectedCallback() {
-        this.addEventListener('click', this.#onClick.bind(this));
         this.#linkPanelsAria();
+        this.addEventListener('click', this.#onClick);
+        this.addEventListener('keydown', this.#onKeyDown);
     }
 
     #getTabs() {
-        return [...this.querySelector('x-tab-list').querySelectorAll('x-tab')];
+        return [...this.#tabList.querySelectorAll('x-tab')];
     }
 
     #getPanels() {
         return [...this.querySelectorAll('x-tab-panel')];
+    }
+
+    get #tabList() {
+        return this.querySelector('x-tab-list');
+    }
+
+    get #selectedTab() {
+        return this.#getTabs().find(tab => tab.selected);
+    }
+
+    get #selectedTabIndex() {
+        return this.#getTabs().findIndex(tab => tab.selected);
+    }
+
+    get #selectedTabPanel() {
+        return this.#getPanelForTab(this.#selectedTab);
+    }
+
+    get #orientation() {
+        return this.#tabList.getAttribute('aria-orientation') || 'horizontal';
     }
 
     #linkPanelsAria() {
@@ -120,6 +151,30 @@ class Tabs extends HTMLElement {
         this.dispatchEvent(new CustomEvent('tab-select', { detail: { tab } }))
     }
 
+    #selectFirstTab() {
+        const tabs = this.#getTabs();
+        this.#selectTab(tabs[0]);
+    }
+
+    #selectPreviousTab() {
+        const tabs = this.#getTabs();
+        const previousIndex = tabs.findIndex(tab => tab.selected) - 1;
+        const previousTab = tabs[(previousIndex + tabs.length) % tabs.length];
+        this.#selectTab(previousTab);
+    }
+
+    #selectNextTab() {
+        const tabs = this.#getTabs();
+        const nextIndex = tabs.findIndex(tab => tab.selected) + 1;
+        const nextTab = tabs[nextIndex % tabs.length];
+        this.#selectTab(nextTab);
+    }
+
+    #selectLastTab() {
+        const tabs = this.#getTabs();
+        this.#selectTab(tabs.length - 1);
+    }
+
     #getPanelForTab(tab) {
         const panelId = tab.getAttribute('aria-controls');
         return this.querySelector(`#${panelId}`);
@@ -133,9 +188,67 @@ class Tabs extends HTMLElement {
         panels.forEach(panel => panel.hidden = true);
     }
 
-    #onClick(event) {
+    #onClick = (event) => {
         if (event.target.getAttribute('role') === 'tab') {
             this.#selectTab(event.target);
+        }
+    }
+
+    #onKeyDown = (event) => {
+        if (event.altKey) return;
+
+        let isHandled = false;
+
+        if (['tab', 'tablist'].includes(event.target.getAttribute('role'))) {
+            switch (event.keyCode) {
+                case KEYCODE.TAB:
+                    if (!event.shiftKey) {
+                        this.#selectedTabPanel.focus();
+                        isHandled = true;
+                    }
+                    break;
+                case KEYCODE.HOME:
+                    this.#selectFirstTab();
+                    isHandled = true;
+                    break;
+                case KEYCODE.LEFT:
+                    if (this.#orientation === 'horizontal') {
+                        this.#selectPreviousTab();
+                        isHandled = true;
+                    }
+                    break;
+                case KEYCODE.UP:
+                    if (this.#orientation === 'vertical') {
+                        this.#selectPreviousTab();
+                        isHandled = true;
+                    }
+                    break;
+                case KEYCODE.RIGHT:
+                    if (this.#orientation === 'horizontal') {
+                        this.#selectNextTab();
+                        isHandled = true;
+                    }
+                    break;
+                case KEYCODE.DOWN:
+                    if (this.#orientation === 'vertical') {
+                        this.#selectNextTab();
+                        isHandled = true;
+                    } else if (this.#tabList.compareDocumentPosition(this.#selectedTabPanel) === Node.DOCUMENT_POSITION_FOLLOWING) {
+                        // For Horizontal tabs, if the panel is after the tablist, the DOWN key should focus the panel.
+                        // Reference: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/tabpanel_role
+                        this.#selectedTabPanel.focus();
+                        isHandled = true;
+                    }
+                    break;
+                case KEYCODE.END:
+                    this.#selectLastTab();
+                    isHandled = true;
+                    break;
+            }
+        }
+
+        if (isHandled) {
+            event.preventDefault();
         }
     }
 }
