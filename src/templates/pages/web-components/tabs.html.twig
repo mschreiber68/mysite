@@ -17,21 +17,62 @@
 <x-tabs class="tabsDemo">
   <div class="tabRow">
     <x-tab>Tab 1</x-tab>
-    <x-tab>Tab 2</x-tab>
+    <x-tab selected>Tab 2</x-tab>
     <x-tab>Tab 3</x-tab>
   </div>
-  <x-tab-panel>Panel 1</x-tab-panel>
+  <x-tab-panel hidden>Panel 1</x-tab-panel>
   <x-tab-panel>Panel 2</x-tab-panel>
-  <x-tab-panel>Panel 3</x-tab-panel>
+  <x-tab-panel hidden>Panel 3</x-tab-panel>
 </x-tabs>
 {% endset %}
 
 {% block main %}
   <h2>Tabs</h2>
   <h3>Components</h3>
+  <p>
+    Tabs are made up of a set of three components:
+  </p>
+    <ul>
+      <li>
+        <code>Tab</code> - A single tab.
+      </li>
+      <li>
+        <code>TabPanel</code> - A container of content that is visible when its corresponding <code>Tab</code> is selected.
+      </li>
+      <li>
+        <code>Tabs</code> - The top-level component containing <code>Tab</code> and <code>TabPanel</code> components.
+      </li>
+    </ul>
+  <p>
+    The Tabs components only define behavior; there is no CSS or Shadow DOM used.
+    This allows client code to customize every aspect of the visual design based on the dynamic attribute behavior.
+  </p>
+  <p>
+    Besides the expected ARIA attribute updates, the following is the component behavior:
+  </p>
+  <ul>
+    <li>
+      The currently active <code>Tab</code> will have the <code>selected</code> attribute.
+    </li>
+    <li>
+      The currently inactive <code>TabPanels</code> will have the <code>hidden</code> attribute.
+    </li>
+    <li>
+      When a <code>Tab</code> is selected, <code>Tabs</code> will dispatch the <code>tab-selected</code> event.
+    </li>
+  </ul>
   <x-code language="javascript">{% include 'components/tabs.js' %}</x-code>
+
   <h3>Demo</h3>
+  <p>
+    The demo below shows how to leverage the dynamic attribute behavior to implement a custom UX.
+  </p>
   <x-code>{{ tabDemo|e }}</x-code>
   <x-code>{% include 'patterns/_tabs-demo.scss' %}</x-code>
   {{ tabDemo }}
+
+  <h3>Resources</h3>
+  <p>
+    <a href="https://github.com/GoogleChromeLabs/howto-components">Google's Web Component tutorials</a> were referenced when building these components.
+  </p>
 {% endblock %}

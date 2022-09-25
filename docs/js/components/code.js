@@ -50,7 +50,6 @@ class Code extends HTMLElement {
             code.classList.add(`language-${this.language}`);
         }
 
-        console.log('HIGHLIGHTING');
         window.hljs.highlightElement(code);
     }
 

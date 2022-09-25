@@ -1,3 +1,7 @@
 @use "../_site.scss";
 @use "../patterns/_nav.scss";
 @use "../patterns/_tabs-demo.scss";
+
+ul code {
+    font-size: 1rem;
+}

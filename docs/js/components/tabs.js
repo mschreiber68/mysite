@@ -70,10 +70,6 @@ window.customElements.define('x-tab-panel', TabPanel);
  ***********************************************/
 
 class Tabs extends HTMLElement {
-    constructor() {
-        super();
-    }
-
     connectedCallback() {
         if (!this.hasAttribute('role')) {
             this.setAttribute('role', 'tablist');
@@ -82,10 +78,6 @@ class Tabs extends HTMLElement {
         this.addEventListener('click', this.#onClick.bind(this));
 
         this.#linkPanelsAria();
-
-        // Select the initial tab
-        const tabs = this.#getTabs();
-        this.#selectTab(tabs.find(tab => tab.selected) || tabs[0]);
     }
 
     #getTabs() {
@@ -114,8 +106,8 @@ class Tabs extends HTMLElement {
         this.#reset();
 
         tab.selected = true;
-
         this.#getPanelForTab(tab).hidden = false;
+        tab.focus();
 
         this.dispatchEvent(new CustomEvent('tab-selected', { detail: { tab } }))
     }
