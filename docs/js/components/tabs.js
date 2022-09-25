@@ -1,3 +1,7 @@
+/***********************************************
+    Tab 
+ ***********************************************/
+
 let tabCounter = 0;
 
 class Tab extends HTMLElement {
@@ -18,8 +22,8 @@ class Tab extends HTMLElement {
 
     attributeChangedCallback() {
         const value = this.hasAttribute('selected');
-        this.setAttribute('aria-selected', value);
-        this.setAttribute('tabindex', value ? 0 : -1);
+        this.setAttribute('aria-selected', value.toString());
+        this.setAttribute('tabindex', value ? '0' : '-1');
     }
 
     connectedCallback() {
@@ -29,11 +33,11 @@ class Tab extends HTMLElement {
 
         this.setAttribute('role', 'tab');
         this.setAttribute('aria-selected', 'false');
-        this.setAttribute('tabindex', -1);
-        this._upgradeProperty('selected');
+        this.setAttribute('tabindex', '-1');
+        this.#upgradeProperty('selected');
     }
 
-    _upgradeProperty(prop) {
+    #upgradeProperty(prop) {
         if (this.hasOwnProperty(prop)) {
             let value = this[prop];
             delete this[prop];
@@ -43,6 +47,10 @@ class Tab extends HTMLElement {
 }
 
 window.customElements.define('x-tab', Tab);
+
+/***********************************************
+    TabPanel
+ ***********************************************/
 
 let panelCounter = 0;
 
@@ -57,10 +65,13 @@ class TabPanel extends HTMLElement {
 
 window.customElements.define('x-tab-panel', TabPanel);
 
+/***********************************************
+    Tabs
+ ***********************************************/
+
 class Tabs extends HTMLElement {
     constructor() {
         super();
-        this._onClick = this._onClick.bind(this);
     }
 
     connectedCallback() {
@@ -68,71 +79,65 @@ class Tabs extends HTMLElement {
             this.setAttribute('role', 'tablist');
         }
 
-        this.addEventListener('click', this._onClick);
+        this.addEventListener('click', this.#onClick.bind(this));
 
-        this._linkPanels();
+        this.#linkPanelsAria();
+
+        // Select the initial tab
+        const tabs = this.#getTabs();
+        this.#selectTab(tabs.find(tab => tab.selected) || tabs[0]);
     }
 
-    disconnectedCallback() {
-        this.removeEventListener('click', this._onClick);
-    }
-
-    _getTabs() {
+    #getTabs() {
         return [...this.querySelectorAll('x-tab')];
     }
 
-    _getPanels() {
+    #getPanels() {
         return [...this.querySelectorAll('x-tab-panel')];
     }
 
-    _linkPanels() {
-        const tabs = this._getTabs();
-        const panels = this._getPanels();
+    #linkPanelsAria() {
+        const tabs = this.#getTabs();
+        const panels = this.#getPanels();
 
-        for (let i = 0; i < tabs.length; i++) {
-            if (i >= panels.length) {
-                break;
+        tabs.forEach((tab, i) => {
+            if (i < panels.length) {
+                tabs[i].setAttribute('aria-controls', panels[i].id);
+                panels[i].setAttribute('aria-labelledby', tabs[i].id);
             }
-            tabs[i].setAttribute('aria-controls', panels[i].id);
-            panels[i].setAttribute('aria-labelledby', tabs[i].id);
-        }
-
-        const selectedTab = tabs.find(tab => tab.selected) || tabs[0];
-
-        this._selectTab(selectedTab);
+        })
     }
 
-    _selectTab(tab) {
+    #selectTab(tab) {
         if (tab.selected) {
             return;
         }
 
-        this._reset();
+        this.#reset();
 
         tab.selected = true;
 
-        const panel = this._getPanelForTab(tab);
-        panel.hidden = false;
+        this.#getPanelForTab(tab).hidden = false;
 
-        this.dispatchEvent(new CustomEvent('tab-select', { detail: { tab } }))
+        this.dispatchEvent(new CustomEvent('tab-selected', { detail: { tab } }))
     }
 
-    _getPanelForTab(tab) {
+    #getPanelForTab(tab) {
         const panelId = tab.getAttribute('aria-controls');
         return this.querySelector(`#${panelId}`);
     }
 
-    _reset() {
-        const tabs = this._getTabs();
-        const panels = this._getPanels();
-
+    #reset() {
+        const tabs = this.#getTabs();
         tabs.forEach(tab => tab.selected = false);
+
+        const panels = this.#getPanels();
         panels.forEach(panel => panel.hidden = true);
     }
 
-    _onClick(event) {
+    #onClick(event) {
         if (event.target.getAttribute('role') === 'tab') {
-            this._selectTab(event.target);
+            this.#selectTab(event.target);
         }
     }
 }

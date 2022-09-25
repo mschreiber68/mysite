@@ -21,7 +21,7 @@
     <script type="module" src="/js/components/tabs.js"></script>
   <script type="module" src="/js/components/code.js"></script>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/dark.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/github-dark-dimmed.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script></head>
 
 <body>
@@ -46,6 +46,152 @@
   <hr class="bottomSeparator">
 </div><main>
     <h2>Tabs</h2>
+  <h3>Components</h3>
+  <x-code language="javascript">/***********************************************
+    Tab 
+ ***********************************************/
+
+let tabCounter = 0;
+
+class Tab extends HTMLElement {
+    static get observedAttributes() {
+        return ['selected'];
+    }
+
+    get selected() {
+        return this.hasAttribute('selected');
+    }
+
+    set selected(value) {
+        if (value)
+            this.setAttribute('selected', '');
+        else
+            this.removeAttribute('selected');
+    }
+
+    attributeChangedCallback() {
+        const value = this.hasAttribute('selected');
+        this.setAttribute('aria-selected', value.toString());
+        this.setAttribute('tabindex', value ? '0' : '-1');
+    }
+
+    connectedCallback() {
+        if (!this.id) {
+            this.id = `tab-${++tabCounter}`;
+        }
+
+        this.setAttribute('role', 'tab');
+        this.setAttribute('aria-selected', 'false');
+        this.setAttribute('tabindex', '-1');
+        this.#upgradeProperty('selected');
+    }
+
+    #upgradeProperty(prop) {
+        if (this.hasOwnProperty(prop)) {
+            let value = this[prop];
+            delete this[prop];
+            this[prop] = value;
+        }
+    }
+}
+
+window.customElements.define('x-tab', Tab);
+
+/***********************************************
+    TabPanel
+ ***********************************************/
+
+let panelCounter = 0;
+
+class TabPanel extends HTMLElement {
+    connectedCallback() {
+        if (!this.id) {
+            this.id = `tab-panel-${++panelCounter}`;
+        }
+        this.setAttribute('role', 'tabpanel');
+    }
+}
+
+window.customElements.define('x-tab-panel', TabPanel);
+
+/***********************************************
+    Tabs
+ ***********************************************/
+
+class Tabs extends HTMLElement {
+    constructor() {
+        super();
+    }
+
+    connectedCallback() {
+        if (!this.hasAttribute('role')) {
+            this.setAttribute('role', 'tablist');
+        }
+
+        this.addEventListener('click', this.#onClick.bind(this));
+
+        this.#linkPanelsAria();
+
+        // Select the initial tab
+        const tabs = this.#getTabs();
+        this.#selectTab(tabs.find(tab => tab.selected) || tabs[0]);
+    }
+
+    #getTabs() {
+        return [...this.querySelectorAll('x-tab')];
+    }
+
+    #getPanels() {
+        return [...this.querySelectorAll('x-tab-panel')];
+    }
+
+    #linkPanelsAria() {
+        const tabs = this.#getTabs();
+        const panels = this.#getPanels();
+
+        tabs.forEach((tab, i) => {
+            if (i < panels.length) {
+                tabs[i].setAttribute('aria-controls', panels[i].id);
+                panels[i].setAttribute('aria-labelledby', tabs[i].id);
+            }
+        })
+    }
+
+    #selectTab(tab) {
+        if (tab.selected) {
+            return;
+        }
+
+        this.#reset();
+
+        tab.selected = true;
+
+        this.#getPanelForTab(tab).hidden = false;
+
+        this.dispatchEvent(new CustomEvent('tab-selected', { detail: { tab } }))
+    }
+
+    #getPanelForTab(tab) {
+        const panelId = tab.getAttribute('aria-controls');
+        return this.querySelector(`#${panelId}`);
+    }
+
+    #reset() {
+        const tabs = this.#getTabs();
+        tabs.forEach(tab => tab.selected = false);
+
+        const panels = this.#getPanels();
+        panels.forEach(panel => panel.hidden = true);
+    }
+
+    #onClick(event) {
+        if (event.target.getAttribute('role') === 'tab') {
+            this.#selectTab(event.target);
+        }
+    }
+}
+
+window.customElements.define('x-tabs', Tabs);</x-code>
   <h3>Demo</h3>
   <x-code>&lt;x-tabs class=&quot;tabsDemo&quot;&gt;
   &lt;div class=&quot;tabRow&quot;&gt;
