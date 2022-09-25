@@ -15,7 +15,7 @@
   <meta property="og:description" content="Mike Schreiber's Page">
 
   <style>
-      :root{--text-color:#444;--primary-color:#336b87;--breakpointSmall:600px}body{background:#fff;color:var(--text-color);display:flex;font-family:Verdana,sans-serif;justify-content:center;line-height:1.5em;padding-bottom:80px}.pageContent{margin:0 15px;width:min(900px,100%)}button{background-color:var(--primary-color);border:none;border-radius:6px;color:#fff;cursor:pointer;padding:12px}@media only screen and (min-width:900px){.pageContent{width:900px}}@media only screen and (max-width:600px){.bigScreenHeader{display:none}}a.textLink{text-decoration:underline}nav a:before,nav a:hover{font-weight:700}nav a:before{content:attr(title);display:block;height:0;overflow:hidden;visibility:hidden}.globalHeading{display:grid;grid-template-areas:"name name" "top top" "nav nav" "bottom bottom"}.nameHeader{grid-area:name;margin:12px 0}.topSeparator{grid-area:top;width:100%}.hamburgerNav{grid-area:nav}.bottomSeparator{grid-area:bottom;width:100%}.hamburgerButton{display:none}.navLinks{display:flex;gap:1.5em;padding:12px 0}a.navLink:active,a.navLink:hover,a.navLink:link,a.navLink:visited{color:var(--text-color);text-decoration:none}@media only screen and (max-width:800px){.globalHeading{grid-template-areas:"top top" "name nav" "bottom bottom";grid-template-columns:1fr auto}.nameHeader{font-size:24px}.hamburgerNav{display:flex;flex-direction:column;justify-content:center;position:relative}.hamburgerButton{cursor:pointer;display:block;font-size:24px}.hamburgerContent{background-color:#fff;display:none;position:absolute;right:0;top:100%;z-index:10}.hamburgerNav[active] .hamburgerContent{display:block}.navLinks{background-color:#eee;border-radius:8px;flex-direction:column;gap:0;padding:8px}.navLink{display:block;margin:8px;white-space:nowrap}}.tabsDemo x-tab-list{display:flex}.tabsDemo x-tab-list x-tab{cursor:pointer;padding:12px 32px}.tabsDemo x-tab-list x-tab[selected]{border-bottom:3px solid var(--primary-color)}.tabsDemo x-tab-panel{display:block;padding:12px}.tabsDemo x-tab-panel[hidden]{display:none}ul code{font-size:1rem}  </style>
+      :root{--text-color:#444;--primary-color:#336b87;--breakpointSmall:600px}body{background:#fff;color:var(--text-color);display:flex;font-family:Verdana,sans-serif;justify-content:center;line-height:1.5em;padding-bottom:80px}.pageContent{margin:0 15px;width:min(900px,100%)}button{background-color:var(--primary-color);border:none;border-radius:6px;color:#fff;cursor:pointer;padding:12px}@media only screen and (min-width:900px){.pageContent{width:900px}}@media only screen and (max-width:600px){.bigScreenHeader{display:none}}a.textLink{text-decoration:underline}nav a:before,nav a:hover{font-weight:700}nav a:before{content:attr(title);display:block;height:0;overflow:hidden;visibility:hidden}.globalHeading{display:grid;grid-template-areas:"name name" "top top" "nav nav" "bottom bottom"}.nameHeader{grid-area:name;margin:12px 0}.topSeparator{grid-area:top;width:100%}.hamburgerNav{grid-area:nav}.bottomSeparator{grid-area:bottom;width:100%}.hamburgerButton{display:none}.navLinks{display:flex;gap:1.5em;padding:12px 0}a.navLink:active,a.navLink:hover,a.navLink:link,a.navLink:visited{color:var(--text-color);text-decoration:none}@media only screen and (max-width:800px){.globalHeading{grid-template-areas:"top top" "name nav" "bottom bottom";grid-template-columns:1fr auto}.nameHeader{font-size:24px}.hamburgerNav{display:flex;flex-direction:column;justify-content:center;position:relative}.hamburgerButton{cursor:pointer;display:block;font-size:24px}.hamburgerContent{background-color:#fff;display:none;position:absolute;right:0;top:100%;z-index:10}.hamburgerNav[active] .hamburgerContent{display:block}.navLinks{background-color:#eee;border-radius:8px;flex-direction:column;gap:0;padding:8px}.navLink{display:block;margin:8px;white-space:nowrap}}x-tabs x-tab-list{display:flex}x-tabs x-tab-list x-tab{cursor:pointer;padding:12px 32px}x-tabs x-tab-list x-tab[selected]{border-bottom:3px solid var(--primary-color)}x-tabs x-tab-panel{display:block;padding:12px}x-tabs x-tab-panel[hidden]{display:none}ul code{font-size:1rem}  </style>
 
   <script type="module" src="/js/patterns/nav.js"></script>
     <script type="module" src="/js/components/tabs.js"></script>
@@ -243,7 +243,7 @@ window.customElements.define('x-tabs', Tabs);</x-code>
     The demo below shows how to leverage the dynamic attribute behavior to implement a custom UX.
     Inspect the demo using your browser's dev tools to see the attribute changes in action.
   </p>
-  <x-code>&lt;x-tabs class=&quot;tabsDemo&quot;&gt;
+  <x-code>&lt;x-tabs&gt;
   &lt;x-tab-list&gt;
     &lt;x-tab&gt;Tab 1&lt;/x-tab&gt;
     &lt;x-tab selected&gt;Tab 2&lt;/x-tab&gt;
@@ -254,7 +254,7 @@ window.customElements.define('x-tabs', Tabs);</x-code>
   &lt;x-tab-panel hidden&gt;Panel 3&lt;/x-tab-panel&gt;
 &lt;/x-tabs&gt;
 </x-code>
-  <x-code>.tabsDemo {
+  <x-code>x-tabs {
     x-tab-list {
         display: flex;
 
@@ -277,7 +277,7 @@ window.customElements.define('x-tabs', Tabs);</x-code>
         }
     }
 }</x-code>
-  <x-tabs class="tabsDemo">
+  <x-tabs>
   <x-tab-list>
     <x-tab>Tab 1</x-tab>
     <x-tab selected>Tab 2</x-tab>
