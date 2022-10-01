@@ -1,0 +1,124 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Mike Schreiber</title>
+  <meta name="description" content="Mike Schreiber">
+  <meta name="author" content="Mike Schreiber">
+
+  <meta property="og:title" content="Mike Schreiber">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://mikeschreiber.dev/">
+  <meta property="og:description" content="Mike Schreiber's Page">
+
+  <style>
+      :root{--text-color:#444;--primary-color:#336b87;--breakpointSmall:600px}body{background:#fff;color:var(--text-color);display:flex;font-family:Verdana,sans-serif;justify-content:center;line-height:1.5em;padding-bottom:80px}.pageContent{margin:0 15px;width:min(900px,100%)}button{background-color:var(--primary-color);border:none;border-radius:6px;color:#fff;cursor:pointer;padding:12px}@media only screen and (min-width:900px){.pageContent{width:900px}}@media only screen and (max-width:600px){.bigScreenHeader{display:none}}a.textLink{text-decoration:underline}nav a:before,nav a:hover{font-weight:700}nav a:before{content:attr(title);display:block;height:0;overflow:hidden;visibility:hidden}.globalHeading{display:grid;grid-template-areas:"name name" "top top" "nav nav" "bottom bottom"}.nameHeader{grid-area:name;margin:12px 0}.topSeparator{grid-area:top;width:100%}.hamburgerNav{grid-area:nav}.bottomSeparator{grid-area:bottom;width:100%}.hamburgerButton{display:none}.navLinks{display:flex;gap:1.5em;padding:12px 0}a.navLink:active,a.navLink:hover,a.navLink:link,a.navLink:visited{color:var(--text-color);text-decoration:none}@media only screen and (max-width:800px){.globalHeading{grid-template-areas:"top top" "name nav" "bottom bottom";grid-template-columns:1fr auto}.nameHeader{font-size:24px}.hamburgerNav{display:flex;flex-direction:column;justify-content:center;position:relative}.hamburgerButton{cursor:pointer;display:block;font-size:24px}.hamburgerContent{background-color:#fff;display:none;position:absolute;right:0;top:100%;z-index:10}.hamburgerNav[active] .hamburgerContent{display:block}.navLinks{background-color:#eee;border-radius:8px;flex-direction:column;gap:0;padding:8px}.navLink{display:block;margin:8px;white-space:nowrap}}x-tabs x-tab-list{display:flex}x-tabs x-tab-list x-tab{cursor:pointer;padding:12px 32px}x-tabs x-tab-list x-tab[selected]{border-bottom:3px solid var(--primary-color)}x-tabs x-tab-panel{display:block;padding:12px}x-tabs x-tab-panel[hidden]{display:none}ul code{font-size:1rem}  </style>
+
+  <script type="module" src="/js/patterns/nav.js"></script>
+    <script type="module" src="/js/components/img-fallback.js"></script>
+  <script type="module" src="/js/components/code.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/github-dark-dimmed.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script></head>
+
+<body>
+<div class="pageContent">
+
+
+<div class="globalHeading">
+  <h1 class="nameHeader">Mike Schreiber</h1>
+  <hr class="topSeparator">
+  <x-dropdown class="hamburgerNav">
+    <x-dropdown-toggle class="hamburgerButton">☰</x-dropdown-toggle>
+    <x-dropdown-content class="hamburgerContent">
+      <nav class="navLinks">
+            <a class="navLink" href="/" title="Home">Home</a>
+    <a class="navLink" href="/web-components" title="Web Components">Web Components</a>
+    <a class="navLink" href="/games" title="Games">Games</a>
+    <a class="navLink" href="/about" title="About">About</a>
+
+      </nav>
+    </x-dropdown-content>
+  </x-dropdown>
+  <hr class="bottomSeparator">
+</div><main>
+    <h2>Img Fallback</h2>
+  <h3>Component</h3>
+  <p>
+    <code>Img Fallback</code> is a component that wraps an <code>img</code> element.
+    It takes a <code>src</code> attribute.
+    If the wrapped image fails to load, the component will attempt to have the <code>img</code> fallback to the image specified in <code>src</code>.
+  </p>
+  <p>
+    <code>Img Fallback</code> uses <code>display: contents</code> in order to <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/display#box">not act as a block</a> around the image it wraps.
+    This allows the component to act as a pure <em>decorator</em> for the <code>img</code> within,
+    so users can continue to develop with the <code>img</code> as they normally would.
+  </p>
+
+  <x-code language="javascript">class ImgFallback extends HTMLElement {
+    connectedCallback() {
+        this.style.display = 'contents';
+
+        this.querySelectorAll('img').forEach((img) => {
+            if (img.complete) this.#loadFallback(img);
+            else img.addEventListener('error', (event) => this.#loadFallback(event.target));
+        })
+    }
+
+    #loadFallback(img) {
+        const fallbackSrc = this.getAttribute('src');
+        if (!fallbackSrc) return;
+
+        if (img.src === fallbackSrc) return;
+
+        img.src = fallbackSrc;
+    }
+}
+
+window.customElements.define('img-fallback', ImgFallback);</x-code>
+
+  <h3>Demo</h3>
+
+  <x-code>  &lt;img-fallback src=&quot;https://via.placeholder.com/200x200?text=fallback&quot;&gt;
+    &lt;img src=&quot;https://via.placeholder.com/200x200?text=main&quot;&gt;
+  &lt;/img-fallback&gt;
+</x-code>
+    <img-fallback src="https://via.placeholder.com/200x200?text=fallback">
+    <img src="https://via.placeholder.com/200x200?text=main">
+  </img-fallback>
+
+
+  <x-code>  &lt;img-fallback src=&quot;https://via.placeholder.com/200x200?text=fallback&quot;&gt;
+    &lt;img src=&quot;/none1.jpg&quot;&gt;
+  &lt;/img-fallback&gt;
+</x-code>
+    <img-fallback src="https://via.placeholder.com/200x200?text=fallback">
+    <img src="/none1.jpg">
+  </img-fallback>
+
+
+  <x-code>  &lt;img-fallback src=&quot;https://via.placeholder.com/200x200?text=lazy+fallback&quot;&gt;
+    &lt;img src=&quot;https://via.placeholder.com/200x200?text=lazy+main&quot; loading=&quot;lazy&quot;&gt;
+  &lt;/img-fallback&gt;
+</x-code>
+    <img-fallback src="https://via.placeholder.com/200x200?text=lazy+fallback">
+    <img src="https://via.placeholder.com/200x200?text=lazy+main" loading="lazy">
+  </img-fallback>
+
+
+  <x-code>  &lt;img-fallback src=&quot;https://via.placeholder.com/200x200?text=lazy+fallback&quot;&gt;
+    &lt;img src=&quot;/none2.jpg&quot; loading=&quot;lazy&quot;&gt;
+  &lt;/img-fallback&gt;
+</x-code>
+    <img-fallback src="https://via.placeholder.com/200x200?text=lazy+fallback">
+    <img src="/none2.jpg" loading="lazy">
+  </img-fallback>
+
+</main>
+
+</div>
+</body>
+</html>

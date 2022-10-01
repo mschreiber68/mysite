@@ -1,0 +1,69 @@
+{% extends 'base-layout.html.twig' %}
+
+{% block inlineCss %}
+  {% include 'css/tabs.css' %}
+{% endblock %}
+
+{% block js %}
+  <script type="module" src="/js/components/img-fallback.js"></script>
+  <script type="module" src="/js/components/code.js"></script>
+{% endblock %}
+
+{% block lib %}
+  {% include 'lib/highlightjs.html.twig' %}
+{% endblock %}
+
+{% set successDemo %}
+  <img-fallback src="https://via.placeholder.com/200x200?text=fallback">
+    <img src="https://via.placeholder.com/200x200?text=main">
+  </img-fallback>
+{% endset %}
+
+{% set fallbackDemo %}
+  <img-fallback src="https://via.placeholder.com/200x200?text=fallback">
+    <img src="/none1.jpg">
+  </img-fallback>
+{% endset %}
+
+{% set lazyDemo %}
+  <img-fallback src="https://via.placeholder.com/200x200?text=lazy+fallback">
+    <img src="https://via.placeholder.com/200x200?text=lazy+main" loading="lazy">
+  </img-fallback>
+{% endset %}
+
+{% set lazyFallbackDemo %}
+  <img-fallback src="https://via.placeholder.com/200x200?text=lazy+fallback">
+    <img src="/none2.jpg" loading="lazy">
+  </img-fallback>
+{% endset %}
+
+{% block main %}
+  <h2>Img Fallback</h2>
+  <h3>Component</h3>
+  <p>
+    <code>Img Fallback</code> is a component that wraps an <code>img</code> element.
+    It takes a <code>src</code> attribute.
+    If the wrapped image fails to load, the component will attempt to have the <code>img</code> fallback to the image specified in <code>src</code>.
+  </p>
+  <p>
+    <code>Img Fallback</code> uses <code>display: contents</code> in order to <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/display#box">not act as a block</a> around the image it wraps.
+    This allows the component to act as a pure <em>decorator</em> for the <code>img</code> within,
+    so users can continue to develop with the <code>img</code> as they normally would.
+  </p>
+
+  <x-code language="javascript">{% include 'components/img-fallback.js' %}</x-code>
+
+  <h3>Demo</h3>
+
+  <x-code>{{ successDemo|e }}</x-code>
+  {{ successDemo }}
+
+  <x-code>{{ fallbackDemo|e }}</x-code>
+  {{ fallbackDemo }}
+
+  <x-code>{{ lazyDemo|e }}</x-code>
+  {{ lazyDemo }}
+
+  <x-code>{{ lazyFallbackDemo|e }}</x-code>
+  {{ lazyFallbackDemo }}
+{% endblock %}
