@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block js %}
-  <script type="module" src="/js/components/anchor-sim.js"></script>
+  <script type="module" src="/js/components/link-like.js"></script>
   <script type="module" src="/js/components/code.js"></script>
 {% endblock %}
 
@@ -14,26 +14,26 @@
 {% endblock %}
 
 {% set textLinkDemo %}
-<anchor-sim href="/">A link of only text</anchor-sim>
+<link-like href="/">A link of only text</link-like>
 {% endset %}
 
 {% set buttonLinkDemo %}
-<anchor-sim href="/" target="_blank">
+<link-like href="/" target="_blank">
   <button>A link as a button</button>
-</anchor-sim>
+</link-like>
 {% endset %}
 
 {% block main %}
-  <h2>Anchor Sim</h2>
+  <h2>Link Like</h2>
   <h3>Component</h3>
   <p>
-    An <code>Anchor Sim</code> is a generic container component with attributes and a click handler that behave exactly as a normal anchor tag.
+    An <code>Link Like</code> is a generic container component with attributes and a click handler that behave exactly as a normal anchor tag.
     This can be useful for SEO purposes if you want content to behave as a link without it being possibly seen or indexed by search engines.
-    The <code>Anchor Sim</code> also implements the <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/link_role">ARIA "link" role</a>.
+    The <code>Link Like</code> also implements the <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/link_role">ARIA "link" role</a>.
     I had trouble thinking of a good name for this component, but I'm open to ideas!
   </p>
 
-  <x-code language="javascript">{% include 'components/anchor-sim.js' %}</x-code>
+  <x-code language="javascript">{% include 'components/link-like.js' %}</x-code>
 
   <h3>Demo</h3>
 

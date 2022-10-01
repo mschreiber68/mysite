@@ -2,7 +2,7 @@ const KEYCODE = {
     ENTER: 13,
 }
 
-class AnchorSim extends HTMLElement {
+class LinkLike extends HTMLElement {
     constructor() {
         super();
         this.addEventListener('click', this.#onClick.bind(this));
@@ -42,4 +42,4 @@ class AnchorSim extends HTMLElement {
     }
 }
 
-window.customElements.define('anchor-sim', AnchorSim);
+window.customElements.define('link-like', LinkLike);
