@@ -1,0 +1,46 @@
+{% extends 'base-layout.html.twig' %}
+
+{% block inlineCss %}
+  {% include 'css/tabs.css' %}
+{% endblock %}
+
+{% block js %}
+  <script type="module" src="/js/components/anchor-sim.js"></script>
+  <script type="module" src="/js/components/code.js"></script>
+{% endblock %}
+
+{% block lib %}
+  {% include 'lib/highlightjs.html.twig' %}
+{% endblock %}
+
+{% set textLinkDemo %}
+<anchor-sim href="/">A link of only text</anchor-sim>
+{% endset %}
+
+{% set buttonLinkDemo %}
+<anchor-sim href="/" target="_blank">
+  <button>A link as a button</button>
+</anchor-sim>
+{% endset %}
+
+{% block main %}
+  <h2>Anchor Sim</h2>
+  <h3>Component</h3>
+  <p>
+    An <code>Anchor Sim</code> is a generic container component with attributes and a click handler that behave exactly as a normal anchor tag.
+    This can be useful for SEO purposes if you want content to behave as a link without it being possibly seen or indexed by search engines.
+    The <code>Anchor Sim</code> also implements the <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/link_role">ARIA "link" role</a>.
+    I had trouble thinking of a good name for this component, but I'm open to ideas!
+  </p>
+
+  <x-code language="javascript">{% include 'components/anchor-sim.js' %}</x-code>
+
+  <h3>Demo</h3>
+
+  <x-code>{{ textLinkDemo|e }}</x-code>
+  {{ textLinkDemo }}
+
+  <x-code>{{ buttonLinkDemo|e }}</x-code>
+  {{ buttonLinkDemo }}
+
+{% endblock %}

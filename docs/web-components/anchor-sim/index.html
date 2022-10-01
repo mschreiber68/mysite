@@ -1,0 +1,124 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Mike Schreiber</title>
+  <meta name="description" content="Mike Schreiber">
+  <meta name="author" content="Mike Schreiber">
+
+  <meta property="og:title" content="Mike Schreiber">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://mikeschreiber.dev/">
+  <meta property="og:description" content="Mike Schreiber's Page">
+
+  <style>
+      :root{--text-color:#444;--primary-color:#336b87;--breakpointSmall:600px}body{background:#fff;color:var(--text-color);display:flex;font-family:Verdana,sans-serif;justify-content:center;line-height:1.5em;padding-bottom:80px}.pageContent{margin:0 15px;width:min(900px,100%)}button{background-color:var(--primary-color);border:none;border-radius:6px;color:#fff;cursor:pointer;padding:12px}@media only screen and (min-width:900px){.pageContent{width:900px}}@media only screen and (max-width:600px){.bigScreenHeader{display:none}}a.textLink{text-decoration:underline}nav a:before,nav a:hover{font-weight:700}nav a:before{content:attr(title);display:block;height:0;overflow:hidden;visibility:hidden}.globalHeading{display:grid;grid-template-areas:"name name" "top top" "nav nav" "bottom bottom"}.nameHeader{grid-area:name;margin:12px 0}.topSeparator{grid-area:top;width:100%}.hamburgerNav{grid-area:nav}.bottomSeparator{grid-area:bottom;width:100%}.hamburgerButton{display:none}.navLinks{display:flex;gap:1.5em;padding:12px 0}a.navLink:active,a.navLink:hover,a.navLink:link,a.navLink:visited{color:var(--text-color);text-decoration:none}@media only screen and (max-width:800px){.globalHeading{grid-template-areas:"top top" "name nav" "bottom bottom";grid-template-columns:1fr auto}.nameHeader{font-size:24px}.hamburgerNav{display:flex;flex-direction:column;justify-content:center;position:relative}.hamburgerButton{cursor:pointer;display:block;font-size:24px}.hamburgerContent{background-color:#fff;display:none;position:absolute;right:0;top:100%;z-index:10}.hamburgerNav[active] .hamburgerContent{display:block}.navLinks{background-color:#eee;border-radius:8px;flex-direction:column;gap:0;padding:8px}.navLink{display:block;margin:8px;white-space:nowrap}}x-tabs x-tab-list{display:flex}x-tabs x-tab-list x-tab{cursor:pointer;padding:12px 32px}x-tabs x-tab-list x-tab[selected]{border-bottom:3px solid var(--primary-color)}x-tabs x-tab-panel{display:block;padding:12px}x-tabs x-tab-panel[hidden]{display:none}ul code{font-size:1rem}  </style>
+
+  <script type="module" src="/js/patterns/nav.js"></script>
+    <script type="module" src="/js/components/anchor-sim.js"></script>
+  <script type="module" src="/js/components/code.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/github-dark-dimmed.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script></head>
+
+<body>
+<div class="pageContent">
+
+
+<div class="globalHeading">
+  <h1 class="nameHeader">Mike Schreiber</h1>
+  <hr class="topSeparator">
+  <x-dropdown class="hamburgerNav">
+    <x-dropdown-toggle class="hamburgerButton">☰</x-dropdown-toggle>
+    <x-dropdown-content class="hamburgerContent">
+      <nav class="navLinks">
+            <a class="navLink" href="/" title="Home">Home</a>
+    <a class="navLink" href="/web-components" title="Web Components">Web Components</a>
+    <a class="navLink" href="/games" title="Games">Games</a>
+    <a class="navLink" href="/about" title="About">About</a>
+
+      </nav>
+    </x-dropdown-content>
+  </x-dropdown>
+  <hr class="bottomSeparator">
+</div><main>
+    <h2>Anchor Sim</h2>
+  <h3>Component</h3>
+  <p>
+    An <code>Anchor Sim</code> is a generic container component with attributes and a click handler that behave exactly as a normal anchor tag.
+    This can be useful for SEO purposes if you want content to behave as a link without it being possibly seen or indexed by search engines.
+    The <code>Anchor Sim</code> also implements the <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/link_role">ARIA "link" role</a>.
+    I had trouble thinking of a good name for this component, but I'm open to ideas!
+  </p>
+
+  <x-code language="javascript">const KEYCODE = {
+    ENTER: 13,
+}
+
+class AnchorSim extends HTMLElement {
+    constructor() {
+        super();
+        this.addEventListener('click', this.#onClick.bind(this));
+        this.addEventListener('keydown', this.#onKeyDown.bind(this));
+    }
+
+    connectedCallback() {
+        this.setAttribute('role', 'link');
+        this.setAttribute('tabindex', '0')
+    }
+
+    #onClick() {
+        this.#doLinkAction();
+    }
+
+    #onKeyDown(event) {
+        switch (event.keyCode) {
+            case KEYCODE.ENTER:
+                this.#doLinkAction();
+                break;
+        }
+    }
+
+    #doLinkAction() {
+        const attrs = this
+            .getAttributeNames()
+            .reduce((attrs, attrName) => {
+                attrs[attrName] = this.getAttribute(attrName);
+                return attrs;
+            }, {});
+
+        const a = document.createElement('a');
+        for (const attrName in attrs) {
+            a.setAttribute(attrName, attrs[attrName]);
+        }
+        a.click();
+    }
+}
+
+window.customElements.define('anchor-sim', AnchorSim);
+</x-code>
+
+  <h3>Demo</h3>
+
+  <x-code>&lt;anchor-sim href=&quot;/&quot;&gt;A link of only text&lt;/anchor-sim&gt;
+</x-code>
+  <anchor-sim href="/">A link of only text</anchor-sim>
+
+
+  <x-code>&lt;anchor-sim href=&quot;/&quot; target=&quot;_blank&quot;&gt;
+  &lt;button&gt;A link as a button&lt;/button&gt;
+&lt;/anchor-sim&gt;
+</x-code>
+  <anchor-sim href="/" target="_blank">
+  <button>A link as a button</button>
+</anchor-sim>
+
+
+</main>
+
+</div>
+</body>
+</html>
