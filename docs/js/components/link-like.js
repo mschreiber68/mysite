@@ -5,8 +5,11 @@ const KEYCODE = {
 class LinkLike extends HTMLElement {
     constructor() {
         super();
-        this.addEventListener('click', this.#onClick.bind(this));
-        this.addEventListener('keydown', this.#onKeyDown.bind(this));
+        this.attachShadow({mode: 'open'});
+        this.shadowRoot.appendChild(template.content.cloneNode(true));
+
+        this.addEventListener('click', this.#onClick);
+        this.addEventListener('keydown', this.#onKeyDown);
     }
 
     connectedCallback() {
@@ -14,11 +17,11 @@ class LinkLike extends HTMLElement {
         this.setAttribute('tabindex', '0')
     }
 
-    #onClick() {
+    #onClick = () => {
         this.#doLinkAction();
     }
 
-    #onKeyDown(event) {
+    #onKeyDown = (event) => {
         switch (event.keyCode) {
             case KEYCODE.ENTER:
                 this.#doLinkAction();
@@ -42,4 +45,16 @@ class LinkLike extends HTMLElement {
     }
 }
 
-window.customElements.define('link-like', LinkLike);
+const template = document.createElement('template');
+template.innerHTML = `
+<style>
+    :host {
+        display: contents;
+        cursor: pointer;
+    }
+</style>
+<slot></slot>
+`
+
+if (!window.customElements.get('link-like'))
+    window.customElements.define('link-like', LinkLike);
