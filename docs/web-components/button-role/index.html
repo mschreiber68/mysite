@@ -49,7 +49,7 @@
   <h3>Component</h3>
   <p>
     A <code>&lt;button-role&gt;</code> is another <em>element decorator</em>.
-    An element decorator augments the behavior of the element it decorates without interfering with styles or layout by using <code>display: contents;</code>.
+    An element decorator augments the behavior of the element it decorates without interfering with styles or layout by using <code>display: contents</code>.
   </p>
   <p>
     <code>&lt;button-role&gt;</code> ensures the decorated element implements the <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/button_role">button role spec</a>,
@@ -116,7 +116,7 @@ class ButtonRole extends HTMLElement {
 
     #onMutation = () =&gt; {
         if (this.firstElementChild !== this.#wrappedElement) {
-            this.#unwrapElement(this.#wrappedElement);
+            this.#unwrapElement();
 
             if (this.firstElementChild) {
                 this.#wrapElement(this.firstElementChild);

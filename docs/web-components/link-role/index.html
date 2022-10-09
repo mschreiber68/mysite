@@ -18,7 +18,7 @@
       :root{--text-color:#444;--primary-color:#336b87;--breakpointSmall:600px}body{background:#fff;color:var(--text-color);display:flex;font-family:Verdana,sans-serif;justify-content:center;line-height:1.5em;padding-bottom:80px}.pageContent{margin:0 15px;width:min(900px,100%)}button{background-color:var(--primary-color);border:none;border-radius:6px;color:#fff;cursor:pointer;padding:12px}@media only screen and (min-width:900px){.pageContent{width:900px}}@media only screen and (max-width:600px){.bigScreenHeader{display:none}}a.textLink{text-decoration:underline}nav a:before,nav a:hover{font-weight:700}nav a:before{content:attr(title);display:block;height:0;overflow:hidden;visibility:hidden}.globalHeading{display:grid;grid-template-areas:"name name" "top top" "nav nav" "bottom bottom"}.nameHeader{grid-area:name;margin:12px 0}.topSeparator{grid-area:top;width:100%}.hamburgerNav{grid-area:nav}.bottomSeparator{grid-area:bottom;width:100%}.hamburgerButton{display:none}.navLinks{display:flex;gap:1.5em;padding:12px 0}a.navLink:active,a.navLink:hover,a.navLink:link,a.navLink:visited{color:var(--text-color);text-decoration:none}@media only screen and (max-width:800px){.globalHeading{grid-template-areas:"top top" "name nav" "bottom bottom";grid-template-columns:1fr auto}.nameHeader{font-size:24px}.hamburgerNav{display:flex;flex-direction:column;justify-content:center;position:relative}.hamburgerButton{cursor:pointer;display:block;font-size:24px}.hamburgerContent{background-color:#fff;display:none;position:absolute;right:0;top:100%;z-index:10}.hamburgerNav[active] .hamburgerContent{display:block}.navLinks{background-color:#eee;border-radius:8px;flex-direction:column;gap:0;padding:8px}.navLink{display:block;margin:8px;white-space:nowrap}}  </style>
 
   <script type="module" src="/js/patterns/nav.js"></script>
-    <script type="module" src="/js/components/link-like.js"></script>
+    <script type="module" src="/js/components/link-role.js"></script>
   <script type="module" src="/js/components/code.js"></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/github-dark-dimmed.min.css">
@@ -45,35 +45,82 @@
   </x-dropdown>
   <hr class="bottomSeparator">
 </div><main>
-    <h2>Link Like</h2>
+    <h2>Link Role</h2>
   <h3>Component</h3>
   <p>
-    An <code>Link Like</code> is a generic container component with attributes and a click handler that behave exactly as a normal anchor tag.
-    This can be useful for SEO purposes if you want content to behave as a link without it being possibly seen or indexed by search engines.
-    The <code>Link Like</code> also implements the <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/link_role">ARIA "link" role</a>.
+    A <code>&lt;link-role&gt;</code> is another <em>element decorator</em>.
+    An element decorator augments the behavior of the element it decorates without interfering with styles or layout by using <code>display: contents</code>.
   </p>
   <p>
-    The attribute interface for <code>&lt;link-like&gt;</code> is identical to that of an <code>&lt;a&gt;</code>, including <code>href</code> and <code>target</code>.
+    <code>&lt;link-role&gt;</code> ensures the decorated element implements the <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/link_role">link role spec</a>,
+    which includes use of ARIA attributes, focus behavior, and keyboard interaction.
+    This can be useful for SEO purposes if you want content to behave as a link without it being possibly seen or indexed by search engines.
+  </p>
+  <p>
+    The attribute interface for <code>&lt;link-role&gt;</code> is identical to that of an <code>&lt;a&gt;</code>, including <code>href</code> and <code>target</code>.
+  </p>
+  <p>
+    The implementation of this component is heavily dependent on the fact that elements with <code>display: contents;</code> are <em>not focusable</em>.
+    This means the component itself cannot fully implement the <code>link</code> ARIA role, and instead implements it
+    on the decorated element.
+    Consequently, if the component content is strictly text, the text will get wrapped in a <code>&lt;span&gt;</code> first.
   </p>
 
   <x-code language="javascript">const KEYCODE = {
     ENTER: 13,
 }
 
-class LinkLike extends HTMLElement {
+class LinkRole extends HTMLElement {
+    #wrappedElement
+    #mutationObserver
+
     constructor() {
         super();
-        this.attachShadow({mode: &#039;open&#039;});
-        this.shadowRoot.appendChild(template.content.cloneNode(true));
-
-        this.addEventListener(&#039;click&#039;, this.#onClick);
-        this.addEventListener(&#039;keydown&#039;, this.#onKeyDown);
+        this.style.display = &#039;contents&#039;;
     }
 
     connectedCallback() {
-        this.setAttribute(&#039;role&#039;, &#039;link&#039;);
-        if (!this.hasAttribute(&#039;tabindex&#039;)) {
-            this.setAttribute(&#039;tabindex&#039;, &#039;0&#039;);
+        if (this.firstElementChild) {
+            this.#wrapElement(this.firstElementChild);
+        } else if (this.textContent) {
+            this.#convertTextContentToSpan();
+            this.#wrapElement(this.firstElementChild);
+        }
+
+        this.#mutationObserver = new MutationObserver(this.#onMutation);
+        this.#mutationObserver.observe(this, {childList: true})
+    }
+
+    disconnectedCallback() {
+        this.#mutationObserver.disconnect();
+    }
+
+    #wrapElement(el) {
+        el.setAttribute(&#039;role&#039;, &#039;link&#039;);
+        if (!el.hasAttribute(&#039;tabindex&#039;)) {
+            el.setAttribute(&#039;tabindex&#039;, &#039;0&#039;);
+        }
+
+        el.addEventListener(&#039;click&#039;, this.#onClick);
+        el.addEventListener(&#039;keydown&#039;, this.#onKeyDown);
+
+        this.#wrappedElement = el;
+    }
+
+    #unwrapElement() {
+        this.#wrappedElement.removeEventListener(&#039;click&#039;, this.#onClick);
+        this.#wrappedElement.removeEventListener(&#039;keydown&#039;, this.#onKeyDown);
+
+        this.#wrappedElement = null;
+    }
+
+    #onMutation = () =&gt; {
+        if (this.firstElementChild !== this.#wrappedElement) {
+            this.#unwrapElement();
+
+            if (this.firstElementChild) {
+                this.#wrapElement(this.firstElementChild);
+            }
         }
     }
 
@@ -103,37 +150,34 @@ class LinkLike extends HTMLElement {
         }
         a.click();
     }
+
+    #convertTextContentToSpan() {
+        const text = this.textContent;
+        this.textContent = &#039;&#039;;
+        const span = document.createElement(&#039;span&#039;);
+        span.textContent = text;
+        this.appendChild(span);
+    }
 }
 
-const template = document.createElement(&#039;template&#039;);
-template.innerHTML = `
-&lt;style&gt;
-    :host {
-        display: contents;
-        cursor: pointer;
-    }
-&lt;/style&gt;
-&lt;slot&gt;&lt;/slot&gt;
-`
-
-if (!window.customElements.get(&#039;link-like&#039;))
-    window.customElements.define(&#039;link-like&#039;, LinkLike);
+if (!window.customElements.get(&#039;link-role&#039;))
+    window.customElements.define(&#039;link-role&#039;, LinkRole);
 </x-code>
 
   <h3>Demo</h3>
 
-  <x-code>&lt;link-like href=&quot;/&quot;&gt;A link of only text&lt;/link-like&gt;
+  <x-code>  &lt;link-role href=&quot;/&quot;&gt;A link of only text&lt;/link-role&gt;
 </x-code>
-  <link-like href="/">A link of only text</link-like>
+    <link-role href="/">A link of only text</link-role>
 
 
-  <x-code>&lt;link-like href=&quot;/&quot; target=&quot;_blank&quot;&gt;
+  <x-code>&lt;link-role href=&quot;/&quot; target=&quot;_blank&quot;&gt;
   &lt;button&gt;A link as a button&lt;/button&gt;
-&lt;/link-like&gt;
+&lt;/link-role&gt;
 </x-code>
-  <link-like href="/" target="_blank">
+  <link-role href="/" target="_blank">
   <button>A link as a button</button>
-</link-like>
+</link-role>
 
 
 </main>

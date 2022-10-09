@@ -1,0 +1,58 @@
+{% extends 'base-layout.html.twig' %}
+
+{% block inlineCss %}
+  {% include 'css/link-role.css' %}
+{% endblock %}
+
+{% block js %}
+  <script type="module" src="/js/components/link-role.js"></script>
+  <script type="module" src="/js/components/code.js"></script>
+{% endblock %}
+
+{% block lib %}
+  {% include 'lib/highlightjs.html.twig' %}
+{% endblock %}
+
+{% set textLinkDemo %}
+  <link-role href="/">A link of only text</link-role>
+{% endset %}
+
+{% set buttonLinkDemo %}
+<link-role href="/" target="_blank">
+  <button>A link as a button</button>
+</link-role>
+{% endset %}
+
+{% block main %}
+  <h2>Link Role</h2>
+  <h3>Component</h3>
+  <p>
+    A <code>&lt;link-role&gt;</code> is another <em>element decorator</em>.
+    An element decorator augments the behavior of the element it decorates without interfering with styles or layout by using <code>display: contents</code>.
+  </p>
+  <p>
+    <code>&lt;link-role&gt;</code> ensures the decorated element implements the <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/link_role">link role spec</a>,
+    which includes use of ARIA attributes, focus behavior, and keyboard interaction.
+    This can be useful for SEO purposes if you want content to behave as a link without it being possibly seen or indexed by search engines.
+  </p>
+  <p>
+    The attribute interface for <code>&lt;link-role&gt;</code> is identical to that of an <code>&lt;a&gt;</code>, including <code>href</code> and <code>target</code>.
+  </p>
+  <p>
+    The implementation of this component is heavily dependent on the fact that elements with <code>display: contents;</code> are <em>not focusable</em>.
+    This means the component itself cannot fully implement the <code>link</code> ARIA role, and instead implements it
+    on the decorated element.
+    Consequently, if the component content is strictly text, the text will get wrapped in a <code>&lt;span&gt;</code> first.
+  </p>
+
+  <x-code language="javascript">{% apply escape %}{% include 'components/link-role.js' %}{% endapply %}</x-code>
+
+  <h3>Demo</h3>
+
+  <x-code>{{ textLinkDemo|e }}</x-code>
+  {{ textLinkDemo }}
+
+  <x-code>{{ buttonLinkDemo|e }}</x-code>
+  {{ buttonLinkDemo }}
+
+{% endblock %}

@@ -1,10 +1,8 @@
 const KEYCODE = {
     ENTER: 13,
-    SPACE: 32,
 }
 
-
-class ButtonRole extends HTMLElement {
+class LinkRole extends HTMLElement {
     #wrappedElement
     #mutationObserver
 
@@ -15,6 +13,9 @@ class ButtonRole extends HTMLElement {
 
     connectedCallback() {
         if (this.firstElementChild) {
+            this.#wrapElement(this.firstElementChild);
+        } else if (this.textContent) {
+            this.#convertTextContentToSpan();
             this.#wrapElement(this.firstElementChild);
         }
 
@@ -27,7 +28,7 @@ class ButtonRole extends HTMLElement {
     }
 
     #wrapElement(el) {
-        el.setAttribute('role', 'button');
+        el.setAttribute('role', 'link');
         if (!el.hasAttribute('tabindex')) {
             el.setAttribute('tabindex', '0');
         }
@@ -56,30 +57,40 @@ class ButtonRole extends HTMLElement {
     }
 
     #onClick = () => {
-        this.#toggleAriaPressed();
+        this.#doLinkAction();
     }
 
     #onKeyDown = (event) => {
         switch (event.keyCode) {
             case KEYCODE.ENTER:
-            case KEYCODE.SPACE:
-                event.target.click();
+                this.#doLinkAction();
                 break;
         }
     }
 
-    #toggleAriaPressed() {
-        const pressed = this.firstElementChild.getAttribute('aria-pressed');
-        if (pressed) {
-            if (pressed === 'true') {
-                this.firstElementChild.setAttribute('aria-pressed', 'false')
-            }
-            if (pressed === 'false') {
-                this.firstElementChild.setAttribute('aria-pressed', 'true')
-            }
+    #doLinkAction() {
+        const attrs = this
+            .getAttributeNames()
+            .reduce((attrs, attrName) => {
+                attrs[attrName] = this.getAttribute(attrName);
+                return attrs;
+            }, {});
+
+        const a = document.createElement('a');
+        for (const attrName in attrs) {
+            a.setAttribute(attrName, attrs[attrName]);
         }
+        a.click();
+    }
+
+    #convertTextContentToSpan() {
+        const text = this.textContent;
+        this.textContent = '';
+        const span = document.createElement('span');
+        span.textContent = text;
+        this.appendChild(span);
     }
 }
 
-if (!window.customElements.get('button-role'))
-    window.customElements.define('button-role', ButtonRole);
+if (!window.customElements.get('link-role'))
+    window.customElements.define('link-role', LinkRole);
