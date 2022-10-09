@@ -14,7 +14,9 @@ class LinkLike extends HTMLElement {
 
     connectedCallback() {
         this.setAttribute('role', 'link');
-        this.setAttribute('tabindex', '0')
+        if (!this.hasAttribute('tabindex')) {
+            this.setAttribute('tabindex', '0');
+        }
     }
 
     #onClick = () => {

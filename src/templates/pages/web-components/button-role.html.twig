@@ -1,0 +1,57 @@
+{% extends 'base-layout.html.twig' %}
+
+{% block inlineCss %}
+  {% include 'css/link-like.css' %}
+{% endblock %}
+
+{% block js %}
+  <script type="module" src="/js/components/button-role.js"></script>
+  <script type="module" src="/js/components/code.js"></script>
+{% endblock %}
+
+{% block lib %}
+  {% include 'lib/highlightjs.html.twig' %}
+{% endblock %}
+
+{% set toggleDemo %}
+<button-role>
+  <div id="toggleDemo" aria-pressed="false">not pressed</div>
+</button-role>
+<script>
+  toggleDemo.addEventListener('click', (event) => {
+      const content = event.target.textContent;
+      event.target.textContent = content.includes('not') ? 'pressed' : 'not pressed'
+  });
+</script>
+{% endset %}
+
+{% block main %}
+  <h2>Button Role</h2>
+  <h3>Component</h3>
+  <p>
+    A <code>&lt;button-role&gt;</code> is another <em>element decorator</em>.
+    An element decorator augments the behavior of the element it decorates without interfering with styles or layout by using <code>display: contents;</code>.
+  </p>
+  <p>
+    <code>&lt;button-role&gt;</code> ensures the decorated element implements the <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/button_role">button role spec</a>,
+    which includes use of ARIA attributes, focus behavior, and keyboard interaction.
+    If an <code>aria-pressed</code> attribute is present on the decorated element,
+    this component will toggle that attribute accordingly.
+  </p>
+  <p>
+    A <code>&lt;button&gt;</code> only allows <a href="https://www.w3.org/TR/2011/WD-html5-20110525/the-button-element.html">phrasing content</a>, which does not include certain elements such as divs.
+    <code>&lt;button-role&gt;</code> allows us to give button-like behavior to <em>any</em> element.
+  </p>
+  <p>
+    The implementation of this component is heavily dependent on the fact that elements with <code>display: contents;</code> are <em>not focusable</em>.
+    This means the component itself cannot fully implement the <code>button</code> ARIA role, and instead implements it
+    on the decorated element.
+  </p>
+
+  <x-code language="javascript">{% apply escape %}{% include 'components/button-role.js' %}{% endapply %}</x-code>
+
+  <h3>Demo</h3>
+
+  <x-code>{{ toggleDemo|e }}</x-code>
+  {{ toggleDemo }}
+{% endblock %}

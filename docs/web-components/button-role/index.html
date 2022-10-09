@@ -1,0 +1,182 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Mike Schreiber</title>
+  <meta name="description" content="Mike Schreiber">
+  <meta name="author" content="Mike Schreiber">
+
+  <meta property="og:title" content="Mike Schreiber">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://mikeschreiber.dev/">
+  <meta property="og:description" content="Mike Schreiber's Page">
+
+  <style>
+      :root{--text-color:#444;--primary-color:#336b87;--breakpointSmall:600px}body{background:#fff;color:var(--text-color);display:flex;font-family:Verdana,sans-serif;justify-content:center;line-height:1.5em;padding-bottom:80px}.pageContent{margin:0 15px;width:min(900px,100%)}button{background-color:var(--primary-color);border:none;border-radius:6px;color:#fff;cursor:pointer;padding:12px}@media only screen and (min-width:900px){.pageContent{width:900px}}@media only screen and (max-width:600px){.bigScreenHeader{display:none}}a.textLink{text-decoration:underline}nav a:before,nav a:hover{font-weight:700}nav a:before{content:attr(title);display:block;height:0;overflow:hidden;visibility:hidden}.globalHeading{display:grid;grid-template-areas:"name name" "top top" "nav nav" "bottom bottom"}.nameHeader{grid-area:name;margin:12px 0}.topSeparator{grid-area:top;width:100%}.hamburgerNav{grid-area:nav}.bottomSeparator{grid-area:bottom;width:100%}.hamburgerButton{display:none}.navLinks{display:flex;gap:1.5em;padding:12px 0}a.navLink:active,a.navLink:hover,a.navLink:link,a.navLink:visited{color:var(--text-color);text-decoration:none}@media only screen and (max-width:800px){.globalHeading{grid-template-areas:"top top" "name nav" "bottom bottom";grid-template-columns:1fr auto}.nameHeader{font-size:24px}.hamburgerNav{display:flex;flex-direction:column;justify-content:center;position:relative}.hamburgerButton{cursor:pointer;display:block;font-size:24px}.hamburgerContent{background-color:#fff;display:none;position:absolute;right:0;top:100%;z-index:10}.hamburgerNav[active] .hamburgerContent{display:block}.navLinks{background-color:#eee;border-radius:8px;flex-direction:column;gap:0;padding:8px}.navLink{display:block;margin:8px;white-space:nowrap}}  </style>
+
+  <script type="module" src="/js/patterns/nav.js"></script>
+    <script type="module" src="/js/components/button-role.js"></script>
+  <script type="module" src="/js/components/code.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/github-dark-dimmed.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script></head>
+
+<body>
+<div class="pageContent">
+
+
+<div class="globalHeading">
+  <h1 class="nameHeader">Mike Schreiber</h1>
+  <hr class="topSeparator">
+  <x-dropdown class="hamburgerNav">
+    <x-dropdown-toggle class="hamburgerButton">☰</x-dropdown-toggle>
+    <x-dropdown-content class="hamburgerContent">
+      <nav class="navLinks">
+            <a class="navLink" href="/" title="Home">Home</a>
+    <a class="navLink" href="/web-components" title="Web Components">Web Components</a>
+    <a class="navLink" href="/games" title="Games">Games</a>
+    <a class="navLink" href="/about" title="About">About</a>
+
+      </nav>
+    </x-dropdown-content>
+  </x-dropdown>
+  <hr class="bottomSeparator">
+</div><main>
+    <h2>Button Role</h2>
+  <h3>Component</h3>
+  <p>
+    A <code>&lt;button-role&gt;</code> is another <em>element decorator</em>.
+    An element decorator augments the behavior of the element it decorates without interfering with styles or layout by using <code>display: contents;</code>.
+  </p>
+  <p>
+    <code>&lt;button-role&gt;</code> ensures the decorated element implements the <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/button_role">button role spec</a>,
+    which includes use of ARIA attributes, focus behavior, and keyboard interaction.
+    If an <code>aria-pressed</code> attribute is present on the decorated element,
+    this component will toggle that attribute accordingly.
+  </p>
+  <p>
+    A <code>&lt;button&gt;</code> only allows <a href="https://www.w3.org/TR/2011/WD-html5-20110525/the-button-element.html">phrasing content</a>, which does not include certain elements such as divs.
+    <code>&lt;button-role&gt;</code> allows us to give button-like behavior to <em>any</em> element.
+  </p>
+  <p>
+    The implementation of this component is heavily dependent on the fact that elements with <code>display: contents;</code> are <em>not focusable</em>.
+    This means the component itself cannot fully implement the <code>button</code> ARIA role, and instead implements it
+    on the decorated element.
+  </p>
+
+  <x-code language="javascript">const KEYCODE = {
+    ENTER: 13,
+    SPACE: 32,
+}
+
+
+class ButtonRole extends HTMLElement {
+    #wrappedElement
+    #mutationObserver
+
+    constructor() {
+        super();
+        this.style.display = &#039;contents&#039;;
+    }
+
+    connectedCallback() {
+        if (this.firstElementChild) {
+            this.#wrapElement(this.firstElementChild);
+        }
+
+        this.#mutationObserver = new MutationObserver(this.#onMutation);
+        this.#mutationObserver.observe(this, {childList: true})
+    }
+
+    disconnectedCallback() {
+        this.#mutationObserver.disconnect();
+    }
+
+    #wrapElement(el) {
+        el.setAttribute(&#039;role&#039;, &#039;button&#039;);
+        if (!el.hasAttribute(&#039;tabindex&#039;)) {
+            el.setAttribute(&#039;tabindex&#039;, &#039;0&#039;);
+        }
+
+        el.addEventListener(&#039;click&#039;, this.#onClick);
+        el.addEventListener(&#039;keydown&#039;, this.#onKeyDown);
+
+        this.#wrappedElement = el;
+    }
+
+    #unwrapElement() {
+        this.#wrappedElement.removeEventListener(&#039;click&#039;, this.#onClick);
+        this.#wrappedElement.removeEventListener(&#039;keydown&#039;, this.#onKeyDown);
+
+        this.#wrappedElement = null;
+    }
+
+    #onMutation = () =&gt; {
+        if (this.firstElementChild !== this.#wrappedElement) {
+            this.#unwrapElement(this.#wrappedElement);
+
+            if (this.firstElementChild) {
+                this.#wrapElement(this.firstElementChild);
+            }
+        }
+    }
+
+    #onClick = () =&gt; {
+        this.#toggleAriaPressed();
+    }
+
+    #onKeyDown = (event) =&gt; {
+        switch (event.keyCode) {
+            case KEYCODE.ENTER:
+            case KEYCODE.SPACE:
+                event.target.click();
+                break;
+        }
+    }
+
+    #toggleAriaPressed() {
+        const pressed = this.firstElementChild.getAttribute(&#039;aria-pressed&#039;);
+        if (pressed) {
+            if (pressed === &#039;true&#039;) {
+                this.firstElementChild.setAttribute(&#039;aria-pressed&#039;, &#039;false&#039;)
+            }
+            if (pressed === &#039;false&#039;) {
+                this.firstElementChild.setAttribute(&#039;aria-pressed&#039;, &#039;true&#039;)
+            }
+        }
+    }
+}
+
+if (!window.customElements.get(&#039;button-role&#039;))
+    window.customElements.define(&#039;button-role&#039;, ButtonRole);</x-code>
+
+  <h3>Demo</h3>
+
+  <x-code>&lt;button-role&gt;
+  &lt;div id=&quot;toggleDemo&quot; aria-pressed=&quot;false&quot;&gt;not pressed&lt;/div&gt;
+&lt;/button-role&gt;
+&lt;script&gt;
+  toggleDemo.addEventListener(&#039;click&#039;, (event) =&gt; {
+      const content = event.target.textContent;
+      event.target.textContent = content.includes(&#039;not&#039;) ? &#039;pressed&#039; : &#039;not pressed&#039;
+  });
+&lt;/script&gt;
+</x-code>
+  <button-role>
+  <div id="toggleDemo" aria-pressed="false">not pressed</div>
+</button-role>
+<script>
+  toggleDemo.addEventListener('click', (event) => {
+      const content = event.target.textContent;
+      event.target.textContent = content.includes('not') ? 'pressed' : 'not pressed'
+  });
+</script>
+
+</main>
+
+</div>
+</body>
+</html>
