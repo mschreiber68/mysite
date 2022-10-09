@@ -59,17 +59,26 @@
   </p>
 
   <x-code language="javascript">class ImgFallback extends HTMLElement {
-    connectedCallback() {
-        this.style.display = 'contents';
+    constructor() {
+        super();
+        this.attachShadow({mode: &#039;open&#039;});
+        this.shadowRoot.appendChild(ImgFallback.template.content.cloneNode(true));
+    }
 
-        this.querySelectorAll('img').forEach((img) => {
-            if (img.complete) this.#loadFallback(img);
-            else img.addEventListener('error', (event) => this.#loadFallback(event.target));
+    connectedCallback() {
+        this.querySelectorAll(&#039;img&#039;).forEach((img) =&gt; {
+            if (img.complete) {
+                if (img.naturalWidth === 0) {
+                    this.#loadFallback(img);
+                }
+            } else {
+                img.addEventListener(&#039;error&#039;, (event) =&gt; this.#loadFallback(event.target));
+            }
         })
     }
 
     #loadFallback(img) {
-        const fallbackSrc = this.getAttribute('src');
+        const fallbackSrc = this.getAttribute(&#039;src&#039;);
         if (!fallbackSrc) return;
 
         if (img.src === fallbackSrc) return;
@@ -78,7 +87,17 @@
     }
 }
 
-window.customElements.define('img-fallback', ImgFallback);</x-code>
+ImgFallback.template = document.createElement(&#039;template&#039;)
+ImgFallback.template.innerHTML = `
+&lt;style&gt;
+    :host {
+        display: contents;
+    }
+&lt;/style&gt;
+&lt;slot&gt;&lt;/slot&gt;
+`;
+
+window.customElements.define(&#039;img-fallback&#039;, ImgFallback);</x-code>
 
   <h3>Demo</h3>
 

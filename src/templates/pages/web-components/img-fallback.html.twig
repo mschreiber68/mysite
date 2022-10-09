@@ -51,7 +51,7 @@
     so users can continue to develop with the <code>img</code> as they normally would.
   </p>
 
-  <x-code language="javascript">{% include 'components/img-fallback.js' %}</x-code>
+  <x-code language="javascript">{% apply escape %}{% include 'components/img-fallback.js' %}{% endapply %}</x-code>
 
   <h3>Demo</h3>
 
